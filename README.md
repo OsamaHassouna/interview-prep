@@ -2,7 +2,7 @@
 
 A single-file self-quiz tool for senior front-end interview prep. Two tracks — **UI** (CSS architecture, design tokens, scalable styling) and **Angular** (core, RxJS, change detection, state, forms, debug). Spaced repetition, XP / level / mastery, four play modes.
 
-**Live:** _add Vercel URL after deploy_
+**Live:** https://interview-prep-oah.vercel.app/
 
 ## How it works
 
