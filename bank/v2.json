@@ -1,0 +1,2332 @@
+{
+  "generated_at": "2026-05-13",
+  "version": "v2-authored",
+  "note": "v2: added `track` field for two-track Mock Interview (ui / angular / both). Dropped css-a11y as a topic; questions absorbed into css-architecture and scalable-styling. Added 3 new senior UI-track topics: css-architecture, design-tokens-systems, scalable-styling. Senior framing throughout — no basics.",
+  "topics": {
+    "angular-core": {
+      "label": "Angular Core"
+    },
+    "rxjs": {
+      "label": "RxJS"
+    },
+    "change-detection-perf": {
+      "label": "Change Detection & Perf"
+    },
+    "state-management": {
+      "label": "State Management"
+    },
+    "forms": {
+      "label": "Forms"
+    },
+    "typescript": {
+      "label": "TypeScript"
+    },
+    "css-architecture": {
+      "label": "CSS Architecture"
+    },
+    "design-tokens-systems": {
+      "label": "Design Tokens & Systems"
+    },
+    "scalable-styling": {
+      "label": "Scalable Styling"
+    },
+    "fe-system-design": {
+      "label": "FE System Design"
+    },
+    "code-debug": {
+      "label": "Code Debug"
+    },
+    "behavioral": {
+      "label": "Behavioral"
+    },
+    "ai-tooling-fe": {
+      "label": "AI Tooling for FE"
+    }
+  },
+  "questions": [
+    {
+      "id": "ang-core-001",
+      "topic": "angular-core",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "signals",
+        "angular-17+"
+      ],
+      "question": "Which best describes the difference between signal() and computed() in Angular?",
+      "options": [
+        {
+          "id": "a",
+          "text": "signal() is writable; computed() is derived, lazy, and memoized."
+        },
+        {
+          "id": "b",
+          "text": "computed() recomputes on every change detection tick."
+        },
+        {
+          "id": "c",
+          "text": "signal() requires NgZone; computed() does not."
+        },
+        {
+          "id": "d",
+          "text": "They are aliases for the same primitive."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. signal() is the writable source of truth. computed() derives from signals, memoizes, and recomputes only when a tracked dependency changes AND the computed is read.",
+        "b": "Wrong. computed() is lazy + memoized — it only recomputes when needed, not every CD tick.",
+        "c": "Wrong. Both are zone-independent. Signals are the foundation for zoneless Angular.",
+        "d": "Wrong. They serve different purposes — source vs. derived."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "ang-core-002",
+      "topic": "angular-core",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "control-flow",
+        "angular-17+"
+      ],
+      "question": "Which is the recommended way to render a conditional in Angular 17+?",
+      "options": [
+        {
+          "id": "a",
+          "text": "@if (user) { <p>{{ user.name }}</p> } @else { <p>Loading…</p> }"
+        },
+        {
+          "id": "b",
+          "text": "<ng-container *ngIf=\"user; else loading\">…</ng-container>"
+        },
+        {
+          "id": "c",
+          "text": "<div [hidden]=\"!user\">…</div>"
+        },
+        {
+          "id": "d",
+          "text": "<ng-template [ngTemplateOutlet]=\"user ? a : b\">…</ng-template>"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The new built-in @if block is the recommended approach from Angular 17+. It's faster, has better type narrowing, and doesn't need a directive import.",
+        "b": "Still works but deprecated path. *ngIf requires CommonModule and produces worse type narrowing than @if.",
+        "c": "Wrong. [hidden] only toggles display; the component is still constructed and bindings still run.",
+        "d": "Overcomplicated. ngTemplateOutlet is for dynamic templates, not basic conditionals."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "ang-core-003",
+      "topic": "angular-core",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "effect",
+        "signals",
+        "lifecycle"
+      ],
+      "question": "Inside an effect(), you want to write to a signal. What's the correct take?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It's fine — effects can freely write to signals."
+        },
+        {
+          "id": "b",
+          "text": "By default it's disallowed; you can pass { allowSignalWrites: true } as an escape hatch, but it's usually a sign the logic belongs in a computed()."
+        },
+        {
+          "id": "c",
+          "text": "Wrap the write in queueMicrotask() to avoid the loop."
+        },
+        {
+          "id": "d",
+          "text": "Effects cannot interact with signals at all — only RxJS streams."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. Writing to a signal that the effect reads creates an infinite loop. Default behavior throws.",
+        "b": "Correct. allowSignalWrites is intentionally an escape hatch. Most cases are better modeled as computed() (derivation) — effects are for side effects like DOM/localStorage/analytics.",
+        "c": "Wrong. queueMicrotask doesn't change Angular's tracking — the loop still triggers.",
+        "d": "Wrong. Effects can read signals and (with the flag) write."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "ang-core-004",
+      "topic": "angular-core",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "@defer",
+        "lazy",
+        "angular-17+"
+      ],
+      "question": "When should you reach for @defer in an Angular 17+ template?",
+      "options": [
+        {
+          "id": "a",
+          "text": "To lazy-load a heavy child component or area based on triggers (viewport, idle, interaction, timer)."
+        },
+        {
+          "id": "b",
+          "text": "To replace lazy-loaded routes."
+        },
+        {
+          "id": "c",
+          "text": "To debounce signal reads in the template."
+        },
+        {
+          "id": "d",
+          "text": "To run code outside Angular zone."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. @defer is a template-level lazy boundary with built-in triggers (on viewport, on idle, on interaction, on timer, on hover) plus @placeholder/@loading/@error blocks. Great for below-the-fold widgets, modal contents, charts.",
+        "b": "Wrong. Route-level lazy loading is still done via the router's loadComponent / loadChildren.",
+        "c": "Wrong. That's not its purpose. Use untracked() if you need to read without tracking.",
+        "d": "Wrong. That's NgZone.runOutsideAngular()."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "ang-core-005",
+      "topic": "angular-core",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "inject",
+        "DI",
+        "standalone"
+      ],
+      "question": "In a standalone Angular component, what's the preferred way to get a service?",
+      "options": [
+        {
+          "id": "a",
+          "text": "private svc = inject(MyService);"
+        },
+        {
+          "id": "b",
+          "text": "constructor(private svc: MyService) {}"
+        },
+        {
+          "id": "c",
+          "text": "static get svc() { return Injector.get(MyService); }"
+        },
+        {
+          "id": "d",
+          "text": "Manually import a singleton from the service file."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. inject() is the modern, ergonomic API. Works in constructors, factories, route guards (functional), interceptors (functional). Required outside class context.",
+        "b": "Still works and isn't going away, but inject() is preferred for new code, especially with functional guards/resolvers/interceptors.",
+        "c": "Wrong. Bypasses DI context — breaks hierarchical injection.",
+        "d": "Wrong. Breaks DI entirely; service won't have its dependencies wired."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "ang-core-006",
+      "topic": "angular-core",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "DestroyRef",
+        "takeUntilDestroyed"
+      ],
+      "question": "What's the modern Angular way to auto-unsubscribe an Observable inside a component?",
+      "options": [
+        {
+          "id": "a",
+          "text": "obs$.pipe(takeUntilDestroyed()).subscribe(…) — uses the component's DestroyRef."
+        },
+        {
+          "id": "b",
+          "text": "ngOnDestroy() { this.sub.unsubscribe(); } — only old way still allowed."
+        },
+        {
+          "id": "c",
+          "text": "Subject + takeUntil(destroy$.next() in ngOnDestroy)."
+        },
+        {
+          "id": "d",
+          "text": "Just leave it; Angular auto-cleans subscriptions in OnPush components."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. takeUntilDestroyed() reads DestroyRef from the injection context, cleans up automatically on component destroy. Best modern pattern. Pass an explicit DestroyRef if called outside injection context.",
+        "b": "Works but verbose and error-prone — easy to miss a sub.",
+        "c": "The pre-DestroyRef boilerplate. Still works but unnecessary.",
+        "d": "Wrong. Angular never auto-cleans your subscriptions. OnPush is about CD, not subs."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "rxjs-001",
+      "topic": "rxjs",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "operators",
+        "switchMap"
+      ],
+      "question": "You handle a search input. Each keystroke fires an HTTP request. Which operator best prevents stale responses from overwriting newer ones?",
+      "options": [
+        {
+          "id": "a",
+          "text": "mergeMap"
+        },
+        {
+          "id": "b",
+          "text": "switchMap"
+        },
+        {
+          "id": "c",
+          "text": "concatMap"
+        },
+        {
+          "id": "d",
+          "text": "exhaustMap"
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. mergeMap runs all inner observables in parallel — old responses can land after new ones.",
+        "b": "Correct. switchMap cancels the previous inner observable when a new value arrives — exactly right for search-as-you-type.",
+        "c": "Wrong. concatMap queues — keystrokes pile up, stale results show in order.",
+        "d": "Wrong. exhaustMap ignores new values while one is in flight — you'd drop the latest search."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "rxjs-002",
+      "topic": "rxjs",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "BehaviorSubject",
+        "ReplaySubject"
+      ],
+      "question": "A new subscriber should receive the LAST value emitted (and only the last) and all future values. Which subject fits best?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Subject"
+        },
+        {
+          "id": "b",
+          "text": "BehaviorSubject"
+        },
+        {
+          "id": "c",
+          "text": "ReplaySubject(10)"
+        },
+        {
+          "id": "d",
+          "text": "AsyncSubject"
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. Subject doesn't replay anything; subscribers only see values emitted AFTER they subscribe.",
+        "b": "Correct. BehaviorSubject holds a single current value, replays it to new subscribers, and emits future values. Requires an initial value.",
+        "c": "Replays the last 10 values, not just 1. Works but overkill if you only want the last.",
+        "d": "Wrong. AsyncSubject emits only the FINAL value, and only on complete()."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "rxjs-003",
+      "topic": "rxjs",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "shareReplay",
+        "multicasting"
+      ],
+      "question": "You have an HTTP call shared across 3 components. Without proper multicasting, what happens?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Angular's HttpClient auto-caches identical GETs."
+        },
+        {
+          "id": "b",
+          "text": "Each subscribe triggers a fresh HTTP request — the request is made 3 times."
+        },
+        {
+          "id": "c",
+          "text": "Only one request fires; Observable subscriptions are inherently shared."
+        },
+        {
+          "id": "d",
+          "text": "The request fires once; subsequent subs receive a cached null."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. HttpClient does NOT auto-cache. You wire caching manually (shareReplay, custom interceptor, library).",
+        "b": "Correct. HttpClient returns a cold Observable — every subscribe re-runs it. Solution: pipe(shareReplay({ bufferSize: 1, refCount: true })).",
+        "c": "Wrong. Most observables are cold by default. Subject family + share* operators make them hot.",
+        "d": "Wrong. Each sub gets its own fresh execution, not cached null."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "rxjs-004",
+      "topic": "rxjs",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "signals",
+        "rxjs",
+        "interop"
+      ],
+      "question": "Given signals now exist in Angular, when do you still reach for RxJS?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Never — replace all RxJS with signals."
+        },
+        {
+          "id": "b",
+          "text": "For event streams, HTTP, debouncing, complex async coordination (switchMap, concat, etc.). Use toSignal()/toObservable() at the boundary."
+        },
+        {
+          "id": "c",
+          "text": "Only inside services; never in components."
+        },
+        {
+          "id": "d",
+          "text": "Only when targeting older browsers without Proxy support."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. RxJS still owns time-based and event-coordination problems. Signals replaced ad-hoc state, not streams.",
+        "b": "Correct. RxJS is best for streams/async coordination; signals are best for synchronous reactive state. toSignal/toObservable bridge them.",
+        "c": "Wrong. There's no service-vs-component rule. Use the right tool per problem.",
+        "d": "Wrong. Both work everywhere modern Angular runs."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "cd-perf-001",
+      "topic": "change-detection-perf",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "OnPush",
+        "change-detection"
+      ],
+      "question": "With ChangeDetectionStrategy.OnPush, which of these does NOT mark the component dirty?",
+      "options": [
+        {
+          "id": "a",
+          "text": "An @Input reference changes."
+        },
+        {
+          "id": "b",
+          "text": "An event binding in the template fires."
+        },
+        {
+          "id": "c",
+          "text": "An async pipe emits a new value."
+        },
+        {
+          "id": "d",
+          "text": "Mutating an object passed as @Input without changing its reference."
+        }
+      ],
+      "correct": "d",
+      "explanations": {
+        "a": "Marks dirty. New reference flowing in triggers CD on the next tick.",
+        "b": "Marks dirty. Event bindings always mark the component (and ancestors).",
+        "c": "Marks dirty. async pipe calls markForCheck() internally.",
+        "d": "Correct. OnPush uses reference equality. Mutating in place keeps the same reference — Angular won't notice. Use a new object/array, or signals."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "cd-perf-002",
+      "topic": "change-detection-perf",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "zoneless",
+        "angular-18+"
+      ],
+      "question": "In a zoneless Angular app, which will NOT trigger change detection?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A signal read in the template being updated via set()"
+        },
+        {
+          "id": "b",
+          "text": "A (click) event handler firing"
+        },
+        {
+          "id": "c",
+          "text": "A setTimeout callback mutating a non-signal class property used in the template"
+        },
+        {
+          "id": "d",
+          "text": "An async pipe receiving a new value"
+        }
+      ],
+      "correct": "c",
+      "explanations": {
+        "a": "Triggers CD — signals are the primary CD trigger in zoneless, with view-level granularity.",
+        "b": "Triggers CD — event bindings still schedule CD.",
+        "c": "Correct. Without Zone.js patching, setTimeout doesn't notify Angular. Mutating a plain property isn't picked up — convert to a signal or use markForCheck().",
+        "d": "Triggers CD — async pipe calls markForCheck() on emission."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "cd-perf-003",
+      "topic": "change-detection-perf",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "hydration",
+        "ssr"
+      ],
+      "question": "Angular's full-app hydration (since v16, improved in v17-19) primarily helps which Core Web Vital?",
+      "options": [
+        {
+          "id": "a",
+          "text": "LCP — by avoiding re-render flash and reusing server-rendered DOM."
+        },
+        {
+          "id": "b",
+          "text": "CLS — by deferring layout until JS runs."
+        },
+        {
+          "id": "c",
+          "text": "INP — only; LCP is unaffected."
+        },
+        {
+          "id": "d",
+          "text": "None — hydration is purely about SEO."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Without hydration, Angular discards SSR DOM and re-renders on bootstrap (LCP flash + CLS). With hydration, Angular claims the existing DOM. INP also benefits (event replay since v18).",
+        "b": "Partially true but the primary benefit framed in Angular docs and the visible user impact is LCP. Hydration also reduces CLS.",
+        "c": "Wrong. LCP is the most visible win.",
+        "d": "Wrong. SEO is helped by SSR; hydration is a runtime perf concern."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "cd-perf-004",
+      "topic": "change-detection-perf",
+      "difficulty": "L4",
+      "mode": "design",
+      "xp": 100,
+      "tags": [
+        "architecture",
+        "perf"
+      ],
+      "question": "Design: a dashboard renders 50 independent widgets (charts, tables, KPIs). Each polls data on its own cadence. Users drag/resize/rearrange. Currently CD runs on every widget every tick and the page is sluggish. What's your architecture?",
+      "model_answer_key_points": [
+        "OnPush everywhere as the default — sibling widgets don't trigger each other's CD",
+        "Per-widget standalone component with @Input config; data comes from a widget-scoped data service (providers on the component, not root)",
+        "Signal-based reactive state per widget for view-level dirty marking",
+        "Virtualization for off-screen widgets — IntersectionObserver to pause polling + skip render",
+        "Polling via interval() + switchMap() + takeUntilDestroyed (auto-cleanup)",
+        "Drag/resize via CDK Drag-Drop; persist layout as a signal store, debounced write",
+        "Profile first (Angular DevTools, Performance panel) before reaching for Web Workers",
+        "Heavy chart computation in a Web Worker via Comlink only if profiling proves it dominates"
+      ],
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "state-001",
+      "topic": "state-management",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "signal-store",
+        "ngrx"
+      ],
+      "question": "@ngrx/signals SignalStore is best described as:",
+      "options": [
+        {
+          "id": "a",
+          "text": "A drop-in replacement for the Redux pattern with the same boilerplate."
+        },
+        {
+          "id": "b",
+          "text": "A lightweight reactive store built on signals with features (withState, withMethods, withComputed, withHooks) — far less boilerplate than classic NgRx."
+        },
+        {
+          "id": "c",
+          "text": "A wrapper around BehaviorSubject with selectors."
+        },
+        {
+          "id": "d",
+          "text": "Identical to NGXS but with a different name."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. The whole point is escaping Redux ceremony (actions/reducers/effects) when you don't need it.",
+        "b": "Correct. SignalStore composes features. Reactive via signals, no actions/reducers, optional rxMethod for async. Ergonomic for medium-sized state.",
+        "c": "Wrong. It's built on signals + computed, not BehaviorSubject.",
+        "d": "Wrong. NGXS uses Redux pattern with decorators."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "state-002",
+      "topic": "state-management",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "server-state",
+        "decision"
+      ],
+      "question": "You're building a dashboard that mostly READS data from APIs with some caching and refetch needs. NgRx vs SignalStore vs TanStack Query (Angular). Best pick?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Classic NgRx — gives you full audit trail."
+        },
+        {
+          "id": "b",
+          "text": "TanStack Query (Angular adapter) for server state + SignalStore (or just signals) for client UI state."
+        },
+        {
+          "id": "c",
+          "text": "Build it on raw RxJS subjects."
+        },
+        {
+          "id": "d",
+          "text": "Skip state management; component-local state for everything."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Possible but heavy. Most dashboards don't need the audit-trail rigor; you'll write a lot of boilerplate for caching that TanStack gives free.",
+        "b": "Correct. The modern split — server state (caching, refetch, stale-while-revalidate) belongs in a query library; client UI state (open/closed, filters) belongs in signals/SignalStore.",
+        "c": "Works but you'll reinvent caching, dedup, retry, error handling.",
+        "d": "Wrong. Cross-component shared state quickly becomes a tangled prop chain."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "state-003",
+      "topic": "state-management",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "selectors",
+        "memoization"
+      ],
+      "question": "In NgRx, what's the main reason to use createSelector instead of mapping inside a component?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It's faster to write."
+        },
+        {
+          "id": "b",
+          "text": "It memoizes by input reference — recomputes only when inputs change, even if the parent state slice changes elsewhere."
+        },
+        {
+          "id": "c",
+          "text": "Selectors auto-subscribe components to the store."
+        },
+        {
+          "id": "d",
+          "text": "Selectors run in a Web Worker."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. They're not faster to write; the benefit is runtime.",
+        "b": "Correct. Memoization is the killer feature — expensive derived state isn't recomputed on every store emission, only when the selected slices change by reference.",
+        "c": "Wrong. You still need store.select(selector) and subscribe (or async pipe).",
+        "d": "Wrong. Selectors run on the main thread."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "forms-001",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "typed-forms",
+        "angular-14+"
+      ],
+      "question": "Strictly Typed Reactive Forms (Angular 14+) give you what main benefit?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Compile-time type safety on form values, controls.get('name'), .value, etc."
+        },
+        {
+          "id": "b",
+          "text": "Automatic form validation."
+        },
+        {
+          "id": "c",
+          "text": "Smaller bundle size."
+        },
+        {
+          "id": "d",
+          "text": "Built-in async validators."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The value shape is inferred from the FormGroup definition. Typos in get('name') and wrong .value usage become compile errors.",
+        "b": "Wrong. You still wire validators yourself.",
+        "c": "Negligible bundle effect.",
+        "d": "Wrong. Async validators have existed for ages, not new with typed forms."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "forms-002",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "cva",
+        "ControlValueAccessor"
+      ],
+      "question": "You're building a custom input component you want to use with reactive forms. What do you need?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Implement ControlValueAccessor + provide NG_VALUE_ACCESSOR with multi: true."
+        },
+        {
+          "id": "b",
+          "text": "Implement OnChanges and emit valueChange events."
+        },
+        {
+          "id": "c",
+          "text": "Extend FormControl directly."
+        },
+        {
+          "id": "d",
+          "text": "Use ng-content to project the input from the parent form."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. CVA is the contract: writeValue, registerOnChange, registerOnTouched, setDisabledState. Then provide NG_VALUE_ACCESSOR with multi: true so multiple CVAs can coexist.",
+        "b": "Works for two-way binding via banana-in-a-box but doesn't integrate with reactive form state (touched, dirty, errors).",
+        "c": "Wrong. FormControl isn't designed to be extended for UI.",
+        "d": "Wrong. Projection skips the encapsulation and doesn't expose the custom UI."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "forms-003",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "async-validator",
+        "race"
+      ],
+      "question": "Your async validator checks username availability via HTTP. The user types fast. What's the most likely bug if you just call http.get inside the validator function?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Validator runs on every keystroke; old responses can resolve after new ones, causing wrong validation state."
+        },
+        {
+          "id": "b",
+          "text": "Angular blocks the form until the request completes."
+        },
+        {
+          "id": "c",
+          "text": "Form values get sent in the request body automatically."
+        },
+        {
+          "id": "d",
+          "text": "Validators can't return Observables — only Promises."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Async validators face the same race problem as search-as-you-type. Use a debounceTime + switchMap inside the validator, or check 'this is the latest value' before applying.",
+        "b": "Wrong. The form just stays in PENDING state during the async validator.",
+        "c": "Wrong. You construct the request manually.",
+        "d": "Wrong. Both Observables and Promises are supported."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "ts-001",
+      "topic": "typescript",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "satisfies"
+      ],
+      "question": "What's the main benefit of `satisfies` over a type annotation?",
+      "options": [
+        {
+          "id": "a",
+          "text": "It's a runtime check in production."
+        },
+        {
+          "id": "b",
+          "text": "It validates a value against a type while preserving the narrowest inferred type of the value."
+        },
+        {
+          "id": "c",
+          "text": "It enforces immutability."
+        },
+        {
+          "id": "d",
+          "text": "It removes the need for generics."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. satisfies is compile-time only.",
+        "b": "Correct. The value keeps its literal/inferred shape so property access stays specific; you still get the type-conformance guarantee. Type annotations widen the type.",
+        "c": "Wrong. That's `as const`.",
+        "d": "Wrong. Generics and satisfies solve different problems."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "ts-002",
+      "topic": "typescript",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "narrowing",
+        "discriminated-union"
+      ],
+      "question": "You have `type Result = { ok: true; data: User } | { ok: false; error: string }`. Best way to narrow?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Check r.ok with an if; TS narrows via the discriminant property."
+        },
+        {
+          "id": "b",
+          "text": "Use typeof r.data === 'object'."
+        },
+        {
+          "id": "c",
+          "text": "Use instanceof Result."
+        },
+        {
+          "id": "d",
+          "text": "Cast: (r as { data: User }).data."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Discriminated unions are the idiomatic pattern. `if (r.ok) { r.data }` narrows the type because TS sees the literal discriminant.",
+        "b": "Works for simple cases but doesn't scale and loses the discriminant pattern.",
+        "c": "Wrong. Result is a type, not a class — instanceof doesn't apply.",
+        "d": "Wrong. Casting bypasses safety; defeats the point of unions."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "ts-003",
+      "topic": "typescript",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "utility-types"
+      ],
+      "question": "Given `type User = { id: number; name: string; email: string }`, which gives you `{ name: string; email: string }`?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pick<User, 'name' | 'email'>"
+        },
+        {
+          "id": "b",
+          "text": "Omit<User, 'name' | 'email'>"
+        },
+        {
+          "id": "c",
+          "text": "Partial<User>"
+        },
+        {
+          "id": "d",
+          "text": "Record<'name' | 'email', User>"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Pick selects the listed keys.",
+        "b": "Wrong. Omit removes the listed keys (would give just { id }).",
+        "c": "Wrong. Partial makes all props optional.",
+        "d": "Wrong. Record creates a map type from keys to a value type."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "ts-004",
+      "topic": "typescript",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "const-assertion"
+      ],
+      "question": "What does `as const` do to `const colors = ['red','green','blue'] as const;`?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Marks the array as readonly and narrows element types to literals ('red' | 'green' | 'blue')."
+        },
+        {
+          "id": "b",
+          "text": "Freezes the array at runtime via Object.freeze."
+        },
+        {
+          "id": "c",
+          "text": "Makes the array reactive."
+        },
+        {
+          "id": "d",
+          "text": "Forces the variable into the const enum optimization."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The array becomes readonly and element types narrow from string to the exact literal union — perfect for deriving a union type via colors[number].",
+        "b": "Wrong. No runtime change — TS-only.",
+        "c": "Wrong. TS has no notion of reactivity.",
+        "d": "Wrong. Const enums are a separate language feature."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "css-001",
+      "topic": "scalable-styling",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "container-queries"
+      ],
+      "question": "Container queries differ from media queries in that they:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Style based on the size of a parent container, not the viewport."
+        },
+        {
+          "id": "b",
+          "text": "Only work in print mode."
+        },
+        {
+          "id": "c",
+          "text": "Replace flexbox."
+        },
+        {
+          "id": "d",
+          "text": "Are a JavaScript API only."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Set container-type: inline-size; on a parent, then @container (min-width: 400px) {…} styles child elements based on the container's width — perfect for reusable components placed in varying layouts.",
+        "b": "Wrong.",
+        "c": "Wrong. Different concern entirely.",
+        "d": "Wrong. Pure CSS, baseline in all modern browsers."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "ui"
+    },
+    {
+      "id": "css-002",
+      "topic": "scalable-styling",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "a11y",
+        "focus-management"
+      ],
+      "question": "User opens a modal via a button click. After close, focus should:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Move to the body — let the browser decide."
+        },
+        {
+          "id": "b",
+          "text": "Return to the button that opened the modal."
+        },
+        {
+          "id": "c",
+          "text": "Move to the first focusable element on the page."
+        },
+        {
+          "id": "d",
+          "text": "Be left wherever the user clicked."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. Body focus disorients keyboard and screen reader users.",
+        "b": "Correct. WAI-ARIA Authoring Practices: focus returns to the triggering element after a modal closes. Keep a reference to the trigger when opening.",
+        "c": "Wrong. Surprises the user; they lose context.",
+        "d": "Wrong. Predictable focus behavior is required for keyboard a11y."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "ui"
+    },
+    {
+      "id": "css-003",
+      "topic": "css-architecture",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "has-selector"
+      ],
+      "question": "What does this select: `.card:has(.featured)` ?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Cards that contain a descendant with class 'featured' — selects the parent based on its child."
+        },
+        {
+          "id": "b",
+          "text": "Cards inside a 'featured' container."
+        },
+        {
+          "id": "c",
+          "text": "Any element with class 'featured' nested under .card."
+        },
+        {
+          "id": "d",
+          "text": "Invalid CSS."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. :has() is the long-awaited parent selector — selects elements that CONTAIN a matching descendant. Baseline in all modern browsers (2023+).",
+        "b": "Wrong. That's `.featured .card`.",
+        "c": "Wrong. That's `.card .featured`.",
+        "d": "Wrong. Valid and widely supported."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "ui"
+    },
+    {
+      "id": "sysdesign-001",
+      "topic": "fe-system-design",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "module-federation",
+        "micro-frontends"
+      ],
+      "question": "Webpack Module Federation in a micro-frontend setup mainly solves which problem?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Sharing code (components, libs) between independently deployed apps at runtime."
+        },
+        {
+          "id": "b",
+          "text": "Replacing service workers."
+        },
+        {
+          "id": "c",
+          "text": "Bundling CSS only."
+        },
+        {
+          "id": "d",
+          "text": "It's a build-time-only feature with no runtime impact."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Module Federation exposes/consumes modules across remotes at runtime — one app can lazy-load components from another deployed app, share Angular/RxJS instances via singleton-shared deps.",
+        "b": "Wrong. Different domain.",
+        "c": "Wrong. Cross-app JS module sharing is the headline.",
+        "d": "Wrong. Federation is fundamentally runtime."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "sysdesign-002",
+      "topic": "fe-system-design",
+      "difficulty": "L4",
+      "mode": "design",
+      "xp": 100,
+      "tags": [
+        "ssr",
+        "ssg",
+        "isr"
+      ],
+      "question": "When would you pick SSR vs SSG vs ISR (or Angular's prerender) for a content-heavy site with some authenticated areas?",
+      "model_answer_key_points": [
+        "SSG / prerender — public marketing pages that change rarely (best LCP, cheap to serve from CDN)",
+        "SSR — pages with per-request personalization or fresh data (auth-aware, dashboard landing)",
+        "ISR / scheduled rebuild — content that updates predictably (blog posts, product pages) — get SSG speed with periodic freshness",
+        "Client-side only — deeply interactive logged-in app shell after a fast initial route",
+        "Use Angular's prerender for SSG-ish pages, full SSR for dynamic ones, and consider edge runtimes for latency",
+        "Tradeoff to mention: SSR cost (compute per request), SSG cost (build time + storage), ISR cost (cache complexity)"
+      ],
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "sysdesign-003",
+      "topic": "fe-system-design",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "monorepo",
+        "tooling-awareness"
+      ],
+      "question": "Why would a frontend team in a multi-app workspace reach for a monorepo tool like Nx, Turborepo, or Rush?",
+      "options": [
+        {
+          "id": "a",
+          "text": "To share code (UI library, utils) across apps and rebuild only what changed when something is touched."
+        },
+        {
+          "id": "b",
+          "text": "Monorepo tools force micro-frontend architecture."
+        },
+        {
+          "id": "c",
+          "text": "Monorepo tools replace the framework's CLI entirely."
+        },
+        {
+          "id": "d",
+          "text": "Monorepo tools auto-deploy to cloud providers."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The pitch is code sharing + incremental builds. Touch a lib used by 3 apps; only those rebuild/test, not the whole repo.",
+        "b": "Wrong. Monorepo tools enable many architectures; they don't require micro-FE.",
+        "c": "Wrong. They extend the framework CLI, not replace it.",
+        "d": "Wrong. Deployment is a separate concern."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "debug-001",
+      "topic": "code-debug",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "memory-leak",
+        "subscriptions"
+      ],
+      "question": "Look at the snippet. What's the worst problem with this code?",
+      "snippet": "ngOnInit() {\n  this.route.params.subscribe(p =>\n    this.svc.load(p['id']).subscribe(d => this.items = d)\n  );\n}",
+      "options": [
+        {
+          "id": "a",
+          "text": "Missing trackBy on the *ngFor."
+        },
+        {
+          "id": "b",
+          "text": "Nested subscribes leak both subscriptions and create a race between param changes."
+        },
+        {
+          "id": "c",
+          "text": "It should use async/await instead."
+        },
+        {
+          "id": "d",
+          "text": "The component should be OnPush."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "A perf concern, not a correctness bug. The leak + race is worse.",
+        "b": "Correct. Neither subscription is unsubscribed (leak). And id=1 response may arrive AFTER id=2, overwriting correct data. Use switchMap + takeUntilDestroyed, or toSignal().",
+        "c": "Wrong. async/await doesn't fix either issue; RxJS operators are the idiomatic answer.",
+        "d": "Useful but unrelated to the bugs."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "debug-002",
+      "topic": "code-debug",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "signals",
+        "effect"
+      ],
+      "question": "What happens with this code?",
+      "snippet": "count = signal(0);\nconstructor() {\n  effect(() => {\n    console.log(this.count());\n    this.count.set(this.count() + 1);\n  });\n}",
+      "options": [
+        {
+          "id": "a",
+          "text": "Logs 0 once, nothing else."
+        },
+        {
+          "id": "b",
+          "text": "Throws — by default effects can't write to signals they read; infinite loop guard kicks in."
+        },
+        {
+          "id": "c",
+          "text": "Increments forever until the browser hangs."
+        },
+        {
+          "id": "d",
+          "text": "Logs 0 then 1, then stops."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. The effect would re-run as count changes — but the runtime detects the loop.",
+        "b": "Correct. Writing to a signal an effect reads is disallowed by default. Either restructure as a computed(), or pass { allowSignalWrites: true } if you really need it (rare).",
+        "c": "Wrong — the loop detection prevents this.",
+        "d": "Wrong."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "debug-003",
+      "topic": "code-debug",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "change-detection",
+        "OnPush"
+      ],
+      "question": "Component is OnPush. Why doesn't this update the view?",
+      "snippet": "@Input() user!: User;\nupdateName() { this.user.name = 'New'; }",
+      "options": [
+        {
+          "id": "a",
+          "text": "OnPush uses reference equality on @Input. Mutating user.name keeps the same reference — Angular doesn't notice. Need a new object or signal."
+        },
+        {
+          "id": "b",
+          "text": "user.name is readonly by default."
+        },
+        {
+          "id": "c",
+          "text": "Inputs are immutable in Angular."
+        },
+        {
+          "id": "d",
+          "text": "Need to call cdr.detach() first."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. OnPush + reference mutation is the most common 'why isn't it updating' bug. Fix: replace user with a new object, use signals, or call markForCheck after the mutation (least elegant).",
+        "b": "Wrong. user.name is freely mutable in TS unless typed readonly.",
+        "c": "Wrong. Inputs are regular properties.",
+        "d": "Wrong. detach() stops CD entirely — opposite of what you want."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "debug-004",
+      "topic": "code-debug",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "forms",
+        "valueChanges"
+      ],
+      "question": "Why does this cause excessive HTTP calls?",
+      "snippet": "this.form.valueChanges.subscribe(v => this.http.post('/check', v).subscribe());",
+      "options": [
+        {
+          "id": "a",
+          "text": "Every keystroke fires a POST; needs debounceTime + distinctUntilChanged + switchMap for cancellation."
+        },
+        {
+          "id": "b",
+          "text": "valueChanges only fires on blur."
+        },
+        {
+          "id": "c",
+          "text": "Angular auto-debounces it; problem is server-side."
+        },
+        {
+          "id": "d",
+          "text": "The form is missing FormsModule."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. valueChanges emits on every change; no debounce. Nested subscribe also leaks and races. Use pipe(debounceTime(300), distinctUntilChanged(), switchMap(v => http.post(...))) with takeUntilDestroyed.",
+        "b": "Wrong. valueChanges emits on every value change.",
+        "c": "Wrong. Angular does not auto-debounce.",
+        "d": "Unrelated to this bug."
+      },
+      "year": 2024,
+      "source": "canon",
+      "track": "angular"
+    },
+    {
+      "id": "behave-001",
+      "topic": "behavioral",
+      "difficulty": "L2",
+      "mode": "behavioral",
+      "xp": 25,
+      "tags": [
+        "STAR",
+        "complexity"
+      ],
+      "question": "Tell me about the most complex Angular UI you've built. What made it complex, what trade-offs did you make, and what would you do differently today?",
+      "model_answer_structure": "STAR: Situation (1-2 sentences), Task (your role), Action (3-5 concrete decisions with reasoning), Result (measurable outcome), Reflection (what you'd change today).",
+      "model_answer_key_points": [
+        "Picked a genuinely complex project (real scope, not a toy)",
+        "Named the dimension of complexity (scale, coupling, perf, coordination, deadline pressure)",
+        "Concrete trade-offs with reasoning ('we chose X over Y because…')",
+        "At least one quantifiable outcome (perf number, ship date hit, adoption metric)",
+        "Reflection — what you'd change with current Angular knowledge (signals, zoneless, control flow)",
+        "Avoid hero narrative — credit collaborators where real"
+      ],
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "behave-002",
+      "topic": "behavioral",
+      "difficulty": "L3",
+      "mode": "behavioral",
+      "xp": 50,
+      "tags": [
+        "STAR",
+        "disagreement"
+      ],
+      "question": "Tell me about a time you disagreed with a designer or PM about a UI decision. How did you resolve it?",
+      "model_answer_structure": "STAR with emphasis on Action and Result. Show empathy, not opposition.",
+      "model_answer_key_points": [
+        "Frame the disagreement around USER impact, not personal preference",
+        "Show you sought to understand their reasoning before pushing your view",
+        "Concrete way you brought data (perf metric, a11y constraint, dev cost, user research)",
+        "Outcome that respected both sides — compromise or new shared understanding, not 'I won'",
+        "If you lost the argument, explain how you supported the decision afterward (key senior signal)"
+      ],
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "behave-003",
+      "topic": "behavioral",
+      "difficulty": "L3",
+      "mode": "behavioral",
+      "xp": 50,
+      "tags": [
+        "STAR",
+        "perf-incident"
+      ],
+      "question": "Tell me about a time you fixed a serious frontend performance problem in production.",
+      "model_answer_structure": "STAR with strong focus on investigation method, not just the fix.",
+      "model_answer_key_points": [
+        "Specific symptom (slow page, high INP/LCP, memory growth)",
+        "Investigation method — how you measured (DevTools, Lighthouse, profiler, RUM)",
+        "Root cause clearly named",
+        "Fix with reasoning + before/after metric",
+        "Prevention — what you added to catch it next time (perf budget, CI check, monitoring)",
+        "Avoid 'we rewrote everything' answers — interviewers want surgical fixes"
+      ],
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "ai-fe-001",
+      "topic": "ai-tooling-fe",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "cursor",
+        "copilot",
+        "workflow"
+      ],
+      "question": "You're refactoring a large Angular component with AI assistance. Which workflow gives the best result for production code?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Accept all AI suggestions inline and run tests at the end."
+        },
+        {
+          "id": "b",
+          "text": "Ask the AI to refactor, review the diff, run unit tests + type check, and gate commits on green CI."
+        },
+        {
+          "id": "c",
+          "text": "Let the AI auto-commit each suggestion to keep velocity high."
+        },
+        {
+          "id": "d",
+          "text": "Disable type checking during the refactor for speed; re-enable at the end."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. Accepting inline without diff review is how subtle regressions land. AI output requires the same review discipline as any contributor.",
+        "b": "Correct. AI proposes, you review the diff, the type system + tests + CI gate the change. Treat AI like a fast intern, not a senior.",
+        "c": "Wrong. Auto-commit removes the review step that catches hallucinations.",
+        "d": "Wrong. The type system is your strongest signal that an AI refactor is incorrect."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "ai-fe-002",
+      "topic": "ai-tooling-fe",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "cursor",
+        "context"
+      ],
+      "question": "In Cursor / similar AI IDEs, what's the most useful action when the AI keeps suggesting outdated API patterns (e.g. *ngIf instead of @if)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Add a rules file (e.g. .cursorrules) that pins the codebase's modern patterns and Angular version."
+        },
+        {
+          "id": "b",
+          "text": "Switch IDEs."
+        },
+        {
+          "id": "c",
+          "text": "Manually delete the suggestion every time."
+        },
+        {
+          "id": "d",
+          "text": "Disable AI completions entirely."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Rules files (.cursorrules, .clinerules, CLAUDE.md, etc.) let you bias the model toward your stack/version/preferences without re-prompting every time. Highest leverage.",
+        "b": "The same problem exists in any AI IDE.",
+        "c": "Painful and doesn't scale.",
+        "d": "Throws the baby out with the bathwater."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "ai-fe-003",
+      "topic": "ai-tooling-fe",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "pr-review",
+        "coderabbit"
+      ],
+      "question": "Tools like CodeRabbit / Greptile add AI to PR review. What's the most realistic productivity benefit in 2025?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Replaces human reviewers entirely."
+        },
+        {
+          "id": "b",
+          "text": "Catches obvious bugs (null checks, off-by-one, security smells) and surfaces context, so human reviewers focus on architecture and intent."
+        },
+        {
+          "id": "c",
+          "text": "Auto-merges PRs that pass tests."
+        },
+        {
+          "id": "d",
+          "text": "Generates new features from the PR description."
+        }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. They miss intent, business context, and tribal knowledge. Best as a first-pass review.",
+        "b": "Correct. The realistic value: filter the low-hanging stuff so humans spend their attention where it matters.",
+        "c": "Not yet mainstream — and a bad idea without strong test coverage.",
+        "d": "That's a different category of tool (codegen)."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "ai-fe-004",
+      "topic": "ai-tooling-fe",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "copilot",
+        "pitfalls"
+      ],
+      "question": "Top failure mode of GitHub Copilot / Cursor when writing Angular code (in your experience as the reviewer):",
+      "options": [
+        {
+          "id": "a",
+          "text": "Hallucinates Angular APIs that don't exist or are deprecated (often confidently)."
+        },
+        {
+          "id": "b",
+          "text": "Refuses to write TypeScript."
+        },
+        {
+          "id": "c",
+          "text": "Only suggests Vue components."
+        },
+        {
+          "id": "d",
+          "text": "Can't write tests at all."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The classic failure: invented operators, wrong RxJS signatures, deprecated decorators, *ngFor over the new @for, old form APIs. Always verify against Angular's current docs.",
+        "b": "Wrong. TS is its strongest mode.",
+        "c": "Wrong. Suggests Angular fine when the file context is Angular.",
+        "d": "Wrong. Tests are often the easiest output."
+      },
+      "year": 2025,
+      "source": "canon",
+      "track": "both"
+    },
+    {
+      "id": "cssarch-001",
+      "topic": "css-architecture",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "@layer",
+        "cascade"
+      ],
+      "question": "You inherit a codebase where third-party CSS keeps fighting your utility classes with high-specificity selectors. Which approach gives the most predictable cascade control without rewriting third-party styles?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Wrap third-party styles in @layer vendor and your own utilities in @layer utilities — define the layer order so utilities always win."
+        },
+        {
+          "id": "b",
+          "text": "Add !important to every utility class."
+        },
+        {
+          "id": "c",
+          "text": "Boost specificity by chaining your class selectors three times (.btn.btn.btn)."
+        },
+        {
+          "id": "d",
+          "text": "Switch the whole project to CSS-in-JS."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. @layer flattens specificity within layers and lets you declare an explicit order at the top — `@layer reset, vendor, base, components, utilities;`. Utilities win regardless of specificity inside them.",
+        "b": "Wrong. !important creates the same arms race one level up, and !important inside layers behaves inversely (earlier layers win for !important).",
+        "c": "Brittle and signals a deeper architectural problem. Specificity wars don't scale.",
+        "d": "Possible but a sledgehammer — @layer solves the exact problem with no migration."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "cssarch-002",
+      "topic": "css-architecture",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "methodology",
+        "scaling"
+      ],
+      "question": "Your design system has ~120 components. The team is split on methodology: pure BEM, utility-first (Tailwind-like), or CUBE CSS. Which choice is most defensible for a primitive + composite component library that other teams consume?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Tokens-first + utilities for primitives, semantic class names for composite components — the methodology serves the layer, not the other way around."
+        },
+        {
+          "id": "b",
+          "text": "Pure BEM everywhere — most consistent."
+        },
+        {
+          "id": "c",
+          "text": "Tailwind for everything; tokens live in tailwind.config.ts."
+        },
+        {
+          "id": "d",
+          "text": "CUBE CSS for everything because it's newer."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Mature design systems mix: tokens are the contract, utilities express primitives cheaply, composite components get readable semantic classes for clarity at the boundary. Methodology is a means to an end.",
+        "b": "Pure BEM scales poorly for primitives (lots of single-prop classes) and obscures composition.",
+        "c": "Utilities-only works in apps; component-library consumers want a stable API, not a wall of utilities they have to reproduce.",
+        "d": "Wrong. Choose methodologies for fit, not novelty."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "cssarch-003",
+      "topic": "css-architecture",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "selector-strategy",
+        "specificity"
+      ],
+      "question": "You want a utility class .text-center to always win over component-level styles, without using !important. Best technique?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Wrap component styles in :where(.component {...}) so they have zero specificity; utilities sit above them naturally."
+        },
+        {
+          "id": "b",
+          "text": "Increase utility specificity by ID selectors (#text-center)."
+        },
+        {
+          "id": "c",
+          "text": "Put utilities in a <style> tag that loads last in the head."
+        },
+        {
+          "id": "d",
+          "text": "Add data attributes and target those instead of classes."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. :where() has zero specificity by spec — wrapping component selectors in it lets normal class-specificity utilities override them cleanly. Pairs beautifully with @layer.",
+        "b": "Wrong. Promoting to IDs is a one-off win that breaks the moment another author does the same.",
+        "c": "Source order is overridden by specificity. Specificity wins over order.",
+        "d": "Data attributes don't have lower specificity than classes — same level."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "cssarch-004",
+      "topic": "css-architecture",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "design",
+      "xp": 50,
+      "tags": [
+        "naming",
+        "scaling"
+      ],
+      "question": "Design: name the layers in your CSS architecture for a multi-team monorepo where 8 product apps share a single design system package. What goes in each layer, and what's the dependency direction?",
+      "model_answer_key_points": [
+        "Reset / normalize layer (browser baseline, zero opinion)",
+        "Tokens layer (CSS custom properties — primitive then semantic — single source of truth, no selectors)",
+        "Primitives layer (un-styled or minimally-styled element bases: button, input, dialog — accept tokens)",
+        "Components layer (composite UI: Card, Modal, Toast — built on primitives, accept variants via tokens or props)",
+        "Patterns / recipes layer (composed app-level UI: SearchHeader, NavBar — live in product apps, can override tokens)",
+        "Utilities layer (functional one-offs — last in cascade order)",
+        "Dependency direction: outer layers consume inner; never the reverse. Tokens know nothing about components; components know nothing about apps.",
+        "Use @layer to make this declarative + cascade-predictable. Each layer is a published surface area; breaking changes are versioned."
+      ],
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "cssarch-005",
+      "topic": "css-architecture",
+      "track": "ui",
+      "difficulty": "L4",
+      "mode": "design",
+      "xp": 100,
+      "tags": [
+        "migration",
+        "legacy"
+      ],
+      "question": "You inherit a 5-year-old Angular app with 4000+ Sass files, deep nesting, hard-coded colors, magic numbers, no tokens. Leadership wants a modern themable system without a 6-month freeze. What's your migration strategy?",
+      "model_answer_key_points": [
+        "Audit first: build a script to extract all color literals, font sizes, spacing values — produce a frequency report",
+        "Tokenize the high-frequency 20% values first (covers 80% of usage)",
+        "Introduce a tokens layer as CSS custom properties — additive, doesn't break existing styles",
+        "Per-file migration: replace literals with var(--token-x) one PR at a time, gated by tests",
+        "Add a lint rule that disallows new color/spacing literals in modified files (ratchet pattern)",
+        "Theming becomes possible the moment tokens are in CSS vars — dark mode is the first proof point",
+        "Component-by-component refactor to primitives + composites where ROI is highest (button, input, modal first)",
+        "Tooling: capture-and-replace scripts, design-token integration via something like Style Dictionary or W3C DTCG",
+        "Communicate trade-offs: migration runs in parallel with feature work; no freeze required; measurable progress (% of files token-pure)"
+      ],
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "tokens-001",
+      "topic": "design-tokens-systems",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "tiers",
+        "primitive-vs-semantic"
+      ],
+      "question": "Best practice for token tiers in a multi-brand design system?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Three tiers: primitive (raw values like blue-500), semantic (intent like color-action-primary), component (specific like button-bg). Components reference semantic; semantic references primitive; primitives are the leaves."
+        },
+        {
+          "id": "b",
+          "text": "One flat list of color/spacing tokens; let component CSS decide everything else."
+        },
+        {
+          "id": "c",
+          "text": "Components should reference primitives directly — fewer indirections, less to maintain."
+        },
+        {
+          "id": "d",
+          "text": "Tier doesn't matter; structure tokens by team (auth-color-primary, billing-color-primary)."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The three-tier model decouples meaning from value. Re-theming = swap the semantic→primitive bindings. Multi-brand = different semantic mappings, same component contracts.",
+        "b": "Flat list works for tiny systems but breaks on theming and brand variants.",
+        "c": "Wrong. Components binding directly to primitives means re-theming requires editing every component.",
+        "d": "Wrong. Team-namespaced tokens reflect org structure, not design intent — and become legacy fast when teams reorg."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "tokens-002",
+      "topic": "design-tokens-systems",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "dtcg",
+        "w3c",
+        "format"
+      ],
+      "question": "What is the W3C DTCG (Design Tokens Community Group) format primarily standardizing?",
+      "options": [
+        {
+          "id": "a",
+          "text": "A JSON schema for design tokens with `$value`, `$type`, references like `{color.brand.primary}`, plus extensions — designed as an interchange format between design tools and code transformers."
+        },
+        {
+          "id": "b",
+          "text": "A CSS spec for native design tokens at runtime."
+        },
+        {
+          "id": "c",
+          "text": "A Figma-only file format."
+        },
+        {
+          "id": "d",
+          "text": "A binary token format optimized for bundle size."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. DTCG is a vendor-neutral JSON spec for tokens that tools (Style Dictionary, Token Studio, design platforms) can read and emit. Solves the cross-tool interop problem.",
+        "b": "Wrong. There's no native browser token spec; CSS custom properties are the runtime mechanism.",
+        "c": "Wrong. DTCG is explicitly tool-agnostic.",
+        "d": "Wrong. JSON-based, human-readable."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "tokens-003",
+      "topic": "design-tokens-systems",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "theming",
+        "dark-mode"
+      ],
+      "question": "Best runtime mechanism for theming a token-based design system (light/dark/high-contrast)?",
+      "options": [
+        {
+          "id": "a",
+          "text": "CSS custom properties redefined under a [data-theme] attribute (or :root with prefers-color-scheme). Components consume var(--…) and don't know which theme is active."
+        },
+        {
+          "id": "b",
+          "text": "Rebuild and swap a CSS bundle per theme at deploy time."
+        },
+        {
+          "id": "c",
+          "text": "Inline all theme styles per component and toggle class names on every element."
+        },
+        {
+          "id": "d",
+          "text": "Use JavaScript to recompute every style on theme change."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The whole point of token indirection. Components reference var(--color-surface); themes redefine the variable on a parent. Instant runtime switching, no rebuilds, no JS recomputation.",
+        "b": "Possible but wasteful; modern systems use CSS vars.",
+        "c": "Doesn't scale; defeats the value of tokenization.",
+        "d": "Wrong. CSS variables already do this at the engine level — no JS needed."
+      },
+      "year": 2024,
+      "source": "canon"
+    },
+    {
+      "id": "tokens-004",
+      "topic": "design-tokens-systems",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "design-to-code",
+        "pipeline"
+      ],
+      "question": "At a high level, what's the typical shape of a design-tokens pipeline going from design tool to product apps?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Design tool exports tokens to JSON (often DTCG) → a transform step emits CSS vars / SCSS / TS types → component library consumes the CSS vars → product apps consume both."
+        },
+        {
+          "id": "b",
+          "text": "Designers commit CSS directly to the component library repo."
+        },
+        {
+          "id": "c",
+          "text": "Apps fetch tokens at runtime from the design tool's API on every page load."
+        },
+        {
+          "id": "d",
+          "text": "There's no pipeline — components hardcode the values from the design file."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The standard shape: design tool → JSON (DTCG) → transform (e.g. Style Dictionary) → multiple outputs (CSS vars, SCSS, TS) → consumed by the component library and apps. Versioned, automatable, decoupled from design tool churn.",
+        "b": "Wrong. Designers don't write production CSS in this model — they edit the source-of-truth tokens.",
+        "c": "Wrong. Runtime fetch from a design tool is fragile and slow. Pipelines are build-time.",
+        "d": "Wrong. Hardcoding values is exactly what tokens prevent."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "tokens-005",
+      "topic": "design-tokens-systems",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "typography",
+        "fluid"
+      ],
+      "question": "You're tokenizing typography for a responsive design system. Designers want T-shirt-size scales that fluidly adapt between breakpoints. Best token shape?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Each font-size token is a `clamp(min, preferred-with-vw, max)` expression — fluid by default, no media-query forking required."
+        },
+        {
+          "id": "b",
+          "text": "Three separate tokens per size (mobile, tablet, desktop), components pick via media queries."
+        },
+        {
+          "id": "c",
+          "text": "One size per scale; designers handle responsive in components."
+        },
+        {
+          "id": "d",
+          "text": "Compute font sizes in JS based on viewport.resize events."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. clamp() with viewport-relative middle term gives fluid type with explicit min/max. Cleanest in tokens — components reference one variable, fluidity is intrinsic.",
+        "b": "Works but multiplies token count and forces every component to handle the responsive switch.",
+        "c": "Pushes responsive concerns into components — defeats the point of tokens.",
+        "d": "Wrong. JS-driven type is jittery, blocks main thread, and breaks SSR."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "tokens-006",
+      "topic": "design-tokens-systems",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "alias",
+        "indirection"
+      ],
+      "question": "When does adding a semantic (alias) token layer between primitives and components become harmful instead of helpful?",
+      "options": [
+        {
+          "id": "a",
+          "text": "When the alias is 1:1 with a primitive and adds no intent — color-text-primary = gray-900 with no other consumer. Adds indirection without leverage."
+        },
+        {
+          "id": "b",
+          "text": "Aliases are always good; more indirection is always better."
+        },
+        {
+          "id": "c",
+          "text": "Aliases only help in dark-mode systems."
+        },
+        {
+          "id": "d",
+          "text": "Aliases harm performance because CSS vars are slow."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Aliases earn their keep when they encode an intent that could swap (color-action-primary = brand-500 now, brand-600 in v2). 1:1 aliases are dead weight that obscure the source of truth.",
+        "b": "Wrong. Excess indirection adds cognitive cost and makes refactors harder.",
+        "c": "Aliases help for any reskin or rebrand, not just dark mode.",
+        "d": "Wrong. CSS var lookups are O(1) and engine-level fast."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "style-001",
+      "topic": "scalable-styling",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "css-in-js",
+        "tailwind",
+        "tradeoffs"
+      ],
+      "question": "For a Senior UI role at a SaaS company shipping a multi-app suite, you must pick the styling strategy. Best framing for the trade-off between Tailwind, CSS Modules, and CSS-in-JS?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pick by where authoring friction is most expensive: Tailwind for high-volume product code (fast, design-token-aligned), CSS Modules for component libraries (stable contracts), CSS-in-JS only if dynamic theming via JS is required — which it usually isn't with CSS vars."
+        },
+        {
+          "id": "b",
+          "text": "Always CSS-in-JS — it's the most modern."
+        },
+        {
+          "id": "c",
+          "text": "Always Tailwind — utilities scale infinitely."
+        },
+        {
+          "id": "d",
+          "text": "Always vanilla CSS — least dependencies."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The honest answer is contextual. Tailwind wins on speed + token alignment in app code. CSS Modules give clean component-library APIs with no JS runtime. CSS-in-JS adds runtime cost (Emotion/Styled) — modern alternatives like vanilla-extract are zero-runtime but more constrained.",
+        "b": "Wrong. CSS-in-JS runtime libs have measurable cost (hydration mismatches, bundle size, performance).",
+        "c": "Utility-only works in apps but consumers of a component library don't want to wire up Tailwind to use your <Button>.",
+        "d": "Vanilla works but loses the affordances each option offers."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "style-002",
+      "topic": "scalable-styling",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "scoping",
+        "specificity"
+      ],
+      "question": "In a component library, you want consumers to be able to style your <Modal /> from outside without forking it. Best primitive?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Expose styling hooks via ::part() on a web component, or document a small set of CSS variables consumers can override (e.g. --modal-bg, --modal-radius). Avoid leaking internal class names as a public API."
+        },
+        {
+          "id": "b",
+          "text": "Use !important on every internal style so consumers know not to touch."
+        },
+        {
+          "id": "c",
+          "text": "Make every internal class globally available; document them as the styling API."
+        },
+        {
+          "id": "d",
+          "text": "Don't allow customization; force consumers to fork."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. CSS vars and ::part() are the design-language for styling APIs in 2024+. They expose intent (background, radius) without leaking implementation (class names that may change). Stable contract for consumers.",
+        "b": "!important escalates a war you don't want.",
+        "c": "Leaking internal class names locks you into them — refactoring breaks consumers silently.",
+        "d": "Doesn't scale; consumers will fork anyway."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "style-003",
+      "topic": "scalable-styling",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "critical-css",
+        "performance"
+      ],
+      "question": "Your component library injects 180kb of CSS, mostly unused on any given page. Best strategy to reduce CSS shipped on initial render?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Per-component code-split CSS (CSS Modules / scoped styles emit one file per component, loader includes only what the page imports). Critical CSS for above-the-fold inlined via build tooling."
+        },
+        {
+          "id": "b",
+          "text": "Switch to inline <style> tags everywhere."
+        },
+        {
+          "id": "c",
+          "text": "Concatenate everything into one larger file for fewer HTTP requests."
+        },
+        {
+          "id": "d",
+          "text": "Use !important on every selector to defeat tree-shaking."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Code-split the CSS along the same boundaries as JS. Modern bundlers + CSS Modules + framework-aware tooling (Next, Angular CLI, Vite) handle this. Then inline critical CSS for the LCP-critical fold.",
+        "b": "Inline styles don't cache and bloat HTML.",
+        "c": "Counterproductive — ships unused CSS to every page.",
+        "d": "Nonsense — !important doesn't affect tree-shaking."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "style-004",
+      "topic": "scalable-styling",
+      "track": "ui",
+      "difficulty": "L4",
+      "mode": "design",
+      "xp": 100,
+      "tags": [
+        "component-library",
+        "container-queries"
+      ],
+      "question": "Design: your design system has a <Card /> that needs to look one way at <= 320px wide (column layout, smaller font) and another at >= 480px (row layout, larger font), independent of viewport. The same card can appear in a wide hero or a narrow sidebar. How do you build this?",
+      "model_answer_key_points": [
+        "Container queries — set container-type: inline-size on a wrapper inside the card (or on the card itself if it accepts the container responsibility)",
+        "@container (max-width: 320px) { … } / @container (min-width: 480px) { … } to switch layout/typography",
+        "Tokens for the breakpoint values — don't hardcode 320/480; reference --card-breakpoint-compact, --card-breakpoint-expanded",
+        "Use container query units (cqi, cqw) for fluid type/spacing within the card",
+        "Fallback strategy: in browsers without container query support (rare in 2025+), default to the larger layout via @supports not (container-type: inline-size) — degrade gracefully",
+        "Avoid coupling to viewport media queries — card lives anywhere, viewport is irrelevant to its layout choice",
+        "Test in Storybook with viewport + container-width controls to verify both modes"
+      ],
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "behave-ui-001",
+      "topic": "behavioral",
+      "track": "both",
+      "difficulty": "L3",
+      "mode": "behavioral",
+      "xp": 50,
+      "tags": [
+        "STAR",
+        "design-systems",
+        "ownership"
+      ],
+      "question": "Walk me through a design system or component library you owned. Cover token structure, component contracts, theming model, and how teams consumed it.",
+      "model_answer_structure": "STAR with strong technical depth on each layer.",
+      "model_answer_key_points": [
+        "Concrete project — name the scope (apps consuming it, # of components, # of teams)",
+        "Token tiers — primitive / semantic / component (or whatever you used); reason for the choice",
+        "Component contract surface — props vs CSS vars vs slots/parts; how consumers customized without forking",
+        "Theming model — light/dark/brand; mechanism (CSS vars under data-theme); runtime vs build-time",
+        "Documentation — how teams discovered + adopted (Storybook? Live playground? Token catalog?)",
+        "Adoption challenge — at least one real friction (resistance from a team, perf issue, migration debt) and how you handled it",
+        "Outcome — measurable adoption % or velocity metric",
+        "What you'd change with current knowledge (container queries, @layer, DTCG, etc.)"
+      ],
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "behave-ui-002",
+      "topic": "behavioral",
+      "track": "both",
+      "difficulty": "L3",
+      "mode": "behavioral",
+      "xp": 50,
+      "tags": [
+        "STAR",
+        "migration",
+        "legacy"
+      ],
+      "question": "Tell me about a large frontend migration you led — framework upgrade, CSS overhaul, jQuery→modern, AngularJS→Angular, etc. How did you sequence it and avoid a feature freeze?",
+      "model_answer_structure": "STAR — strong on the sequencing decisions and risk management.",
+      "model_answer_key_points": [
+        "What you migrated from/to and why (forced by EOL, perf, team velocity, etc.)",
+        "Coexistence pattern — both old and new running side by side (route-by-route, component-by-component, ng-upgrade, etc.)",
+        "Migration ratchet — automated check that NEW code can't use the old pattern (lint, CI)",
+        "Risk management — flags, canary, rollback plan",
+        "Stakeholder communication — how you sold the cost to PMs / leadership without a freeze",
+        "Concrete metric — % migrated per week, bugs introduced, perf delta",
+        "What broke and what you learned",
+        "Avoid 'we rewrote everything in a hackathon' answers — interviewers want surgical, incremental, measurable"
+      ],
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "behave-ui-003",
+      "topic": "behavioral",
+      "track": "both",
+      "difficulty": "L3",
+      "mode": "behavioral",
+      "xp": 50,
+      "tags": [
+        "STAR",
+        "complex-ui",
+        "dashboard"
+      ],
+      "question": "Describe the most complex UI you've built. What made it complex — scale, performance, real-time data, multi-tenant theming, accessibility under constraint — and what trade-offs did you make?",
+      "model_answer_structure": "STAR. Lead with the dimension of complexity, not 'we built a dashboard'.",
+      "model_answer_key_points": [
+        "Pick ONE clear axis of complexity (not 'all of them')",
+        "Concrete scale — # of widgets, data volume, # of concurrent users, # of tenants",
+        "Architecture decisions tied to the complexity — virtualization, OnPush, signals, worker offload, cache layer",
+        "Real trade-off you accepted — feature you cut, browser you dropped, design you simplified for perf",
+        "Measurable outcome — load time, INP, ship date, adoption",
+        "What you'd do differently today with newer tooling",
+        "Candidate projects to draw from: Tallam (dashboards), Truelogy, Romoz, ADI, design-system-infrastructure. Pick the one with the strongest 'one axis' story and metric attached."
+      ],
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "debug-005",
+      "topic": "code-debug",
+      "track": "ui",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "css",
+        "specificity",
+        "scoping"
+      ],
+      "question": "Your design system Card component has a border-radius set via CSS var, but in one consumer app it's getting overridden to 0. Both apps use the same component version. Where do you look first?",
+      "snippet": ".card { border-radius: var(--card-radius, 8px); }",
+      "options": [
+        {
+          "id": "a",
+          "text": "The consumer app is setting --card-radius: 0 on an ancestor — inherited CSS vars cascade. Check :root and any wrapper with the var redefined."
+        },
+        {
+          "id": "b",
+          "text": "The fallback `8px` is ignored when --card-radius is undefined."
+        },
+        {
+          "id": "c",
+          "text": "CSS vars don't work across Shadow DOM boundaries."
+        },
+        {
+          "id": "d",
+          "text": "Tailwind's preflight is resetting border-radius globally."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. CSS custom properties inherit. A wrapper or :root setting --card-radius: 0 cascades into the card. Inspect with DevTools — Computed tab shows where the var was resolved.",
+        "b": "Wrong. The fallback is used exactly when the var is undefined.",
+        "c": "CSS vars DO penetrate shadow DOM (they're inherited custom properties).",
+        "d": "Preflight sets a default, but the card uses border-radius via a var — preflight doesn't touch consumer-scoped vars."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "debug-006",
+      "topic": "code-debug",
+      "track": "angular",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "signals",
+        "input",
+        "angular-17.1+"
+      ],
+      "question": "In Angular 17.1+, you wrote `name = input.required<string>();` then read `name` in the template as `{{ name }}`. The template shows `[Object object]`. What's wrong?",
+      "options": [
+        {
+          "id": "a",
+          "text": "input() returns an InputSignal — you must call it: `{{ name() }}`."
+        },
+        {
+          "id": "b",
+          "text": "input.required doesn't exist; it's input.mandatory."
+        },
+        {
+          "id": "c",
+          "text": "Templates can't render signals directly."
+        },
+        {
+          "id": "d",
+          "text": "input() requires zoneless mode to be enabled."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. input() returns a signal-like InputSignal. Reading without invocation gives you the signal object, not its value. Use {{ name() }} or [attr]=\"name()\".",
+        "b": "Wrong. The API is input.required<T>().",
+        "c": "Templates render signals fine — when you invoke them.",
+        "d": "Wrong. input() works in both modes."
+      },
+      "year": 2025,
+      "source": "canon"
+    }
+  ]
+}

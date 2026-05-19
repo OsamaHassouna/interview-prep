@@ -1,0 +1,150 @@
+{
+  "topic": "_seed",
+  "label": "Seed (UI dev mock — replaced by real bank)",
+  "questions": [
+    {
+      "id": "seed-001",
+      "topic": "angular-core",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": ["signals", "angular-17+"],
+      "question": "Which best describes the difference between `signal()` and `computed()` in Angular?",
+      "options": [
+        { "id": "a", "text": "signal() is writable; computed() is derived, lazy, and memoized." },
+        { "id": "b", "text": "computed() recomputes on every change detection tick regardless of dependencies." },
+        { "id": "c", "text": "signal() requires NgZone to track changes." },
+        { "id": "d", "text": "They are aliases for the same primitive." }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. signal() is the writable source of truth; computed() derives from signals, memoizes, and only recomputes when a read dependency changes AND the computed is itself read.",
+        "b": "Wrong. computed() is lazy and memoized. It only recomputes when a tracked dependency changes AND the computed is read.",
+        "c": "Wrong. Signals are zone-independent — they're the foundation for Angular's zoneless mode.",
+        "d": "Wrong. signal() and computed() serve different purposes: source vs. derived."
+      },
+      "year": 2025,
+      "source": "seed"
+    },
+    {
+      "id": "seed-002",
+      "topic": "rxjs",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": ["operators", "switchMap"],
+      "question": "You handle a search input. Each keystroke fires an HTTP request. Which RxJS operator best prevents stale responses from overwriting newer ones?",
+      "options": [
+        { "id": "a", "text": "mergeMap" },
+        { "id": "b", "text": "switchMap" },
+        { "id": "c", "text": "concatMap" },
+        { "id": "d", "text": "exhaustMap" }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. mergeMap runs all inner observables in parallel; an old response can land after a new one.",
+        "b": "Correct. switchMap cancels the previous inner observable when a new value arrives — exactly the right behavior for search-as-you-type.",
+        "c": "Wrong. concatMap queues — keystrokes pile up and you'd see stale results in order.",
+        "d": "Wrong. exhaustMap ignores new values while one is in flight — you'd drop the most recent search."
+      },
+      "year": 2024,
+      "source": "seed"
+    },
+    {
+      "id": "seed-003",
+      "topic": "change-detection-perf",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": ["zoneless", "signals", "angular-18+"],
+      "question": "In a zoneless Angular app, which of these will NOT trigger change detection?",
+      "options": [
+        { "id": "a", "text": "A signal read in the template being updated via `set()`" },
+        { "id": "b", "text": "A `(click)` event binding firing" },
+        { "id": "c", "text": "A `setTimeout()` callback mutating a class property used in the template" },
+        { "id": "d", "text": "An `async` pipe receiving a new value" }
+      ],
+      "correct": "c",
+      "explanations": {
+        "a": "Triggers CD. Signals are the primary CD trigger in zoneless mode — view granularity.",
+        "b": "Triggers CD. Event bindings still schedule CD in zoneless mode.",
+        "c": "Correct answer (does NOT trigger). Without Zone.js patching, setTimeout no longer notifies Angular. Mutating a plain property won't be picked up — you'd need a signal or manual `markForCheck`.",
+        "d": "Triggers CD. The async pipe calls `markForCheck()` internally on each emission."
+      },
+      "year": 2025,
+      "source": "seed"
+    },
+    {
+      "id": "seed-004",
+      "topic": "typescript",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": ["satisfies", "type-safety"],
+      "question": "What's the main benefit of `satisfies` over a type annotation?",
+      "options": [
+        { "id": "a", "text": "It's a runtime check at production." },
+        { "id": "b", "text": "It validates against a type while preserving the narrowest inferred type of the value." },
+        { "id": "c", "text": "It enforces immutability of the value." },
+        { "id": "d", "text": "It removes the need for generics." }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. `satisfies` is compile-time only, no runtime effect.",
+        "b": "Correct. `satisfies` checks the value conforms to a type, but the variable keeps its specific inferred shape — so downstream property access is type-safe to the literal level.",
+        "c": "Wrong. `as const` is what makes values deeply readonly.",
+        "d": "Wrong. Generics and `satisfies` solve different problems."
+      },
+      "year": 2024,
+      "source": "seed"
+    },
+    {
+      "id": "seed-005",
+      "topic": "ai-tooling-fe",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": ["cursor", "copilot", "workflow"],
+      "question": "You're refactoring a large Angular component with AI assistance. Which workflow gives the BEST result for production code?",
+      "options": [
+        { "id": "a", "text": "Accept all AI suggestions inline and run tests at the end." },
+        { "id": "b", "text": "Ask the AI to refactor, review the diff, run unit tests + type check, and gate commits on green CI." },
+        { "id": "c", "text": "Let the AI auto-commit each suggestion to keep velocity high." },
+        { "id": "d", "text": "Disable type checking during the refactor for speed; re-enable at the end." }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Wrong. Accepting inline without diff review is how subtle regressions land. AI output requires the same review discipline as any contributor.",
+        "b": "Correct. The mature pattern: AI proposes, you review the diff, the type system + tests + CI gate the change.",
+        "c": "Wrong. Auto-commit removes the human review step that catches AI hallucinations and incorrect refactors.",
+        "d": "Wrong. Disabling the type system removes the strongest signal that an AI-driven refactor is incorrect."
+      },
+      "year": 2025,
+      "source": "seed"
+    },
+    {
+      "id": "seed-006",
+      "topic": "code-debug",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": ["memory-leak", "subscriptions"],
+      "question": "```ts\nngOnInit() {\n  this.route.params.subscribe(p =>\n    this.svc.load(p['id']).subscribe(d => this.items = d)\n  );\n}\n```\nWhat's the worst problem with this code?",
+      "options": [
+        { "id": "a", "text": "Missing trackBy on the *ngFor." },
+        { "id": "b", "text": "Nested subscribes leak both subscriptions and create a race condition between param changes." },
+        { "id": "c", "text": "It should use async/await instead of subscriptions." },
+        { "id": "d", "text": "The component should be marked OnPush." }
+      ],
+      "correct": "b",
+      "explanations": {
+        "a": "Not the worst issue — perf concern, not correctness. The leak + race condition is more serious.",
+        "b": "Correct. Both subscriptions are never unsubscribed (leak). And id=1 response may arrive AFTER id=2 — overwriting correct data. Use switchMap + takeUntilDestroyed, or toSignal().",
+        "c": "Wrong. async/await doesn't address either issue. RxJS operators handle this idiomatically.",
+        "d": "Useful improvement but unrelated to the bugs in the snippet."
+      },
+      "year": 2025,
+      "source": "seed"
+    }
+  ]
+}
