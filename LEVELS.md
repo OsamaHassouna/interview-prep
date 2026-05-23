@@ -78,6 +78,7 @@ A "session" = one launch of the quiz UI / day. Counter increments on first quest
 - **Topic Drill** — pick one topic, drill till exhausted or you tap out
 - **Boss Round** — 10 mixed Qs from one topic. No skips. Bonus XP + badge on 80%+
 - **Mock Interview** — 5 Qs across modes from a role preset (e.g. "Senior Angular @ fintech")
+- **Guided Path** — leveled learning path (e.g. Forms + API). MCQ-only Qs grouped by level. Pass the level (>= `passThreshold`) to unlock the next level. After each level the user can view a practical example (scenario + reference solution). Path Qs are excluded from the other modes.
 
 ## Wrong-answer flow
 

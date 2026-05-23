@@ -75,6 +75,44 @@ For `mode: "design"` same shape as `open`.
 | L4         | 100 |
 | L5         | 200 |
 
+## Guided Paths (v2.1+)
+
+Optional `paths` block at the root of `bank/v2.json` defines leveled learning paths. Questions opt into a path with three extra fields: `path`, `level`, `order` — all otherwise ordinary MCQs that are excluded from the normal modes (Daily / Drill / Boss / Mock) so they only appear in Guided Path mode.
+
+```json
+"paths": {
+  "forms-http-v1": {
+    "label": "Forms + API",
+    "subtitle": "...",
+    "emoji": "📈",
+    "passThreshold": 0.8,
+    "levels": [
+      {
+        "level": 1,
+        "title": "Reactive form basics",
+        "summary": "...",
+        "practical": {
+          "title": "...",
+          "scenario": "...",
+          "hints": ["...", "..."],
+          "solution": "```ts\n...\n```"
+        }
+      }
+    ]
+  }
+}
+```
+
+A question opts in by adding:
+
+```json
+{ "path": "forms-http-v1", "level": 3, "order": 2, ... }
+```
+
+### Gate
+
+Pass = `correct / total >= path.passThreshold` for the level's questions. On pass the user picks: **Advance**, **Repeat**, or **See practical example**. On fail: Repeat or Practical only.
+
 ## ID prefixes
 
 | Topic                 | Prefix       |

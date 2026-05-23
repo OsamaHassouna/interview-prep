@@ -13,6 +13,7 @@ HTML = ROOT / "ui" / "index.html"
 bank = json.loads(BANK.read_text(encoding="utf-8"))
 new_data = {
     "topics": bank["topics"],
+    "paths": bank.get("paths", {}),
     "questions": bank["questions"],
 }
 new_json = json.dumps(new_data, indent=2, ensure_ascii=False)
@@ -30,4 +31,5 @@ new_html, n = pattern.subn(lambda m: replacement, html, count=1)
 if n != 1:
     raise SystemExit(f"Expected 1 replacement, got {n}")
 HTML.write_text(new_html, encoding="utf-8")
-print(f"Injected {len(bank['questions'])} questions across {len(bank['topics'])} topics.")
+paths = bank.get("paths", {})
+print(f"Injected {len(bank['questions'])} questions across {len(bank['topics'])} topics + {len(paths)} guided path(s).")

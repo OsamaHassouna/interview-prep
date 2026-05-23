@@ -133,6 +133,15 @@
       <h3 class="text-lg font-semibold mb-1">Mock Interview</h3>
       <p class="text-sm text-slate-400">5 Qs across modes from a role preset. Sim the real thing.</p>
     </button>
+
+    <button data-mode="path" class="mode-card md:col-span-2 text-left p-6 rounded-2xl bg-gradient-to-br from-amber-600/15 to-orange-600/10 border border-amber-500/30 hover:border-amber-400 transition group">
+      <div class="flex items-start justify-between mb-3">
+        <div class="text-3xl">📈</div>
+        <div class="text-xs px-2 py-1 rounded-full bg-amber-500/20 text-amber-300">New · Learning path</div>
+      </div>
+      <h3 class="text-lg font-semibold mb-1">Guided Path</h3>
+      <p class="text-sm text-slate-400">Leveled learning ladder — basics to advanced. Pass each level to unlock the next. Practical example at the end of every level.</p>
+    </button>
   </div>
 
   <h2 class="text-xl font-bold mb-4">Topic mastery</h2>
@@ -172,6 +181,91 @@
     <button class="track-filter px-3 py-1 rounded-full text-xs bg-slate-800 border border-slate-700 hover:border-slate-500 transition" data-track-filter="angular">⚡ Angular</button>
   </div>
   <div id="topic-picker-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+</section>
+
+<!-- PATH PICKER VIEW -->
+<section id="view-path-picker" class="view fade-in hidden">
+  <button data-view="home" class="nav-btn text-sm text-slate-400 hover:text-slate-200 mb-4">← Back</button>
+  <h1 class="text-2xl font-bold mb-1">Guided Paths</h1>
+  <p class="text-slate-400 mb-6">Multi-level learning paths. MCQ only. Pass a level to unlock the next.</p>
+  <div id="path-list" class="grid grid-cols-1 gap-3"></div>
+</section>
+
+<!-- LEVEL PICKER VIEW -->
+<section id="view-level-picker" class="view fade-in hidden">
+  <button id="level-picker-back" class="text-sm text-slate-400 hover:text-slate-200 mb-4">← Back to paths</button>
+  <h1 id="level-picker-title" class="text-2xl font-bold mb-1">Path</h1>
+  <p id="level-picker-subtitle" class="text-slate-400 mb-6"></p>
+  <div id="level-list" class="space-y-2"></div>
+</section>
+
+<!-- PATH LEVEL END VIEW -->
+<section id="view-path-level-end" class="view fade-in hidden">
+  <div class="text-center py-8">
+    <div class="text-6xl mb-4" id="path-end-emoji">🎉</div>
+    <h1 class="text-3xl font-bold mb-2" id="path-end-title">Level passed</h1>
+    <p class="text-slate-400 mb-2" id="path-end-stats">5 / 6 correct · 83%</p>
+    <p class="text-slate-500 text-sm mb-8" id="path-end-threshold">Pass threshold: 80%</p>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3 max-w-3xl mx-auto">
+    <button id="path-end-advance" class="hidden p-4 rounded-xl bg-gradient-to-br from-emerald-600/20 to-emerald-700/10 border border-emerald-500/40 hover:border-emerald-400 transition text-left">
+      <div class="text-xl mb-1">⏭️</div>
+      <div class="font-semibold">Advance</div>
+      <div class="text-xs text-slate-400" id="path-end-advance-label">Level N+1</div>
+    </button>
+    <button id="path-end-repeat" class="p-4 rounded-xl bg-slate-900 border border-slate-700 hover:border-slate-500 transition text-left">
+      <div class="text-xl mb-1">🔁</div>
+      <div class="font-semibold">Repeat</div>
+      <div class="text-xs text-slate-400">Reinforce this level</div>
+    </button>
+    <button id="path-end-practical" class="p-4 rounded-xl bg-gradient-to-br from-amber-600/15 to-orange-600/10 border border-amber-500/40 hover:border-amber-400 transition text-left">
+      <div class="text-xl mb-1">🛠️</div>
+      <div class="font-semibold">Practical example</div>
+      <div class="text-xs text-slate-400">A real scenario for this level</div>
+    </button>
+  </div>
+  <div class="text-center mt-6">
+    <button id="path-end-exit" class="text-sm text-slate-400 hover:text-slate-200">← Back to levels</button>
+  </div>
+</section>
+
+<!-- PRACTICAL VIEW -->
+<section id="view-practical" class="view fade-in hidden">
+  <button id="practical-back" class="text-sm text-slate-400 hover:text-slate-200 mb-4">← Back</button>
+  <div class="flex items-center gap-2 mb-4 text-xs">
+    <span class="px-2 py-1 rounded-md bg-amber-500/20 text-amber-300">📈 Practical</span>
+    <span id="practical-level-label" class="text-slate-500"></span>
+  </div>
+  <h1 id="practical-title" class="text-2xl font-bold mb-6">Practical</h1>
+
+  <div class="space-y-4">
+    <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <h2 class="text-xs uppercase tracking-wide text-violet-300 font-semibold mb-3">Scenario</h2>
+      <div id="practical-scenario" class="text-slate-200 leading-relaxed"></div>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <h2 class="text-xs uppercase tracking-wide text-violet-300 font-semibold mb-3">Hints</h2>
+      <ul id="practical-hints" class="list-disc list-outside ml-5 text-sm text-slate-300 space-y-1"></ul>
+    </div>
+
+    <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-xs uppercase tracking-wide text-violet-300 font-semibold">Reference solution</h2>
+        <button id="practical-reveal-btn" class="px-4 py-1.5 rounded-md bg-violet-600 hover:bg-violet-500 text-sm font-semibold transition">Reveal</button>
+      </div>
+      <div id="practical-solution-wrap" class="hidden">
+        <p class="text-xs text-slate-500 mb-3">One way to solve it. There are others — get something working, then compare.</p>
+        <div id="practical-solution" class="text-sm"></div>
+      </div>
+      <div id="practical-solution-hint" class="text-sm text-slate-500">Try it in your editor first. Reveal once you've taken a real swing.</div>
+    </div>
+
+    <div class="flex flex-wrap gap-3 pt-2">
+      <button id="practical-back-to-path" class="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm font-medium transition">Back to levels</button>
+      <button id="practical-advance" class="hidden px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-sm font-semibold transition">Advance to next level →</button>
+    </div>
+  </div>
 </section>
 
 <!-- QUIZ VIEW -->
@@ -337,6 +431,7 @@
       <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700"><span class="font-semibold">📚 Topic Drill</span> — pick a topic, optionally filter by track</div>
       <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700"><span class="font-semibold">👹 Boss Round</span> — 10 Qs in one topic, no skips, 80%+ earns Platinum eligibility</div>
       <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700"><span class="font-semibold">🎙️ Mock Interview</span> — 5 L3+ Qs from chosen track (UI / Angular)</div>
+      <div class="p-3 rounded-lg bg-slate-800/60 border border-slate-700"><span class="font-semibold">📈 Guided Path</span> — leveled MCQ ladder. Pass a level (80%+) to unlock the next. Practical example at the end of each level.</div>
     </div>
   </div>
 </div>
@@ -383,6 +478,91 @@
     },
     "ai-tooling-fe": {
       "label": "AI Tooling for FE"
+    }
+  },
+  "paths": {
+    "forms-http-v1": {
+      "label": "Forms + API",
+      "subtitle": "First real project: from reactive form basics to async validators + HTTP.",
+      "emoji": "📈",
+      "passThreshold": 0.8,
+      "levels": [
+        {
+          "level": 1,
+          "title": "Reactive form basics",
+          "summary": "FormGroup, FormControl, binding to inputs, reacting to changes.",
+          "practical": {
+            "title": "Sign-up form skeleton",
+            "scenario": "Build a reactive FormGroup with `name`, `email`, and `password` controls. In the template, bind each control with `formControlName`. Add a 'Fill demo' button that calls `setValue` with sample data. Subscribe to the form's `valueChanges` and log each change to the console. Show a 'Submit' button — clicking it logs `form.value`.",
+            "hints": [
+              "Use `new FormGroup({ ... })` or `inject(FormBuilder).group({ ... })`.",
+              "Don't forget `ReactiveFormsModule` in the component's `imports`.",
+              "`valueChanges` is an Observable — subscribe in the constructor or `ngOnInit`."
+            ],
+            "solution": "```ts\nimport { Component, inject } from '@angular/core';\nimport { FormBuilder, ReactiveFormsModule } from '@angular/forms';\n\n@Component({\n  selector: 'app-signup',\n  standalone: true,\n  imports: [ReactiveFormsModule],\n  template: `\n    <form [formGroup]=\"form\" (ngSubmit)=\"onSubmit()\">\n      <input formControlName=\"name\"     placeholder=\"Name\" />\n      <input formControlName=\"email\"    placeholder=\"Email\" />\n      <input formControlName=\"password\" placeholder=\"Password\" type=\"password\" />\n      <button type=\"button\" (click)=\"fillDemo()\">Fill demo</button>\n      <button type=\"submit\">Submit</button>\n    </form>\n  `,\n})\nexport class SignupComponent {\n  private fb = inject(FormBuilder);\n  form = this.fb.group({\n    name: '',\n    email: '',\n    password: '',\n  });\n\n  constructor() {\n    this.form.valueChanges.subscribe(v => console.log('changed:', v));\n  }\n\n  fillDemo() {\n    this.form.setValue({ name: 'Osama', email: 'o@x.com', password: 'demo1234' });\n  }\n\n  onSubmit() {\n    console.log('submit:', this.form.value);\n  }\n}\n```"
+          }
+        },
+        {
+          "level": 2,
+          "title": "Built-in & custom validators",
+          "summary": "Validators.required, custom sync validators, displaying errors.",
+          "practical": {
+            "title": "Registration form with validation",
+            "scenario": "Extend the sign-up form: `name` is required, `email` must pass `Validators.email`, and `password` must satisfy a custom validator — at least 8 characters AND contain at least one digit. Show error messages under each field, but only after the control is `touched`. Disable Submit while the form is invalid.",
+            "hints": [
+              "Custom validator signature: `(c: AbstractControl) => ValidationErrors | null`.",
+              "Return `{ tooShort: true }` or `{ noDigit: true }` and check `errors?.['tooShort']` in the template.",
+              "`[disabled]=\"form.invalid\"` on the submit button."
+            ],
+            "solution": "```ts\nimport { AbstractControl, ValidationErrors, ValidatorFn, Validators, FormBuilder, ReactiveFormsModule } from '@angular/forms';\nimport { Component, inject } from '@angular/core';\n\nfunction passwordStrength(): ValidatorFn {\n  return (c: AbstractControl): ValidationErrors | null => {\n    const v = String(c.value ?? '');\n    if (v.length < 8) return { tooShort: true };\n    if (!/\\d/.test(v)) return { noDigit: true };\n    return null;\n  };\n}\n\n@Component({\n  selector: 'app-register',\n  standalone: true,\n  imports: [ReactiveFormsModule],\n  template: `\n    <form [formGroup]=\"form\" (ngSubmit)=\"onSubmit()\">\n      <input formControlName=\"name\" placeholder=\"Name\" />\n      @if (form.controls.name.touched && form.controls.name.errors?.['required']) {\n        <small>Name is required.</small>\n      }\n\n      <input formControlName=\"email\" placeholder=\"Email\" />\n      @if (form.controls.email.touched && form.controls.email.errors?.['email']) {\n        <small>Invalid email.</small>\n      }\n\n      <input formControlName=\"password\" placeholder=\"Password\" type=\"password\" />\n      @if (form.controls.password.touched) {\n        @if (form.controls.password.errors?.['tooShort']) { <small>Min 8 chars.</small> }\n        @if (form.controls.password.errors?.['noDigit'])  { <small>Needs a digit.</small> }\n      }\n\n      <button type=\"submit\" [disabled]=\"form.invalid\">Submit</button>\n    </form>\n  `,\n})\nexport class RegisterComponent {\n  private fb = inject(FormBuilder);\n  form = this.fb.group({\n    name:     ['', Validators.required],\n    email:    ['', [Validators.required, Validators.email]],\n    password: ['', [Validators.required, passwordStrength()]],\n  });\n  onSubmit() { console.log(this.form.value); }\n}\n```"
+          }
+        },
+        {
+          "level": 3,
+          "title": "Business-logic & multi-field validation",
+          "summary": "Cross-field validators, conditional required, calculated fields.",
+          "practical": {
+            "title": "Order form with calculated totals",
+            "scenario": "Build an order form. The user picks an item type (`'standard' | 'priority'`). When `priority` is selected, a `notes` field becomes required. Two number fields — `qty` and `unitPrice` — combine into a read-only `lineTotal` that auto-updates. If `lineTotal > 1000`, apply a 10% discount to a read-only `finalTotal`. Submit is disabled unless valid.",
+            "hints": [
+              "Subscribe to `type.valueChanges` → `setValidators` / `clearValidators` on `notes` + `updateValueAndValidity()`.",
+              "Subscribe to `qty.valueChanges` and `unitPrice.valueChanges` → `setValue(total, { emitEvent: false })` to avoid loops.",
+              "Read-only fields can be `disabled` or just non-editable in the template."
+            ],
+            "solution": "```ts\nimport { Component, inject } from '@angular/core';\nimport { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';\n\n@Component({\n  selector: 'app-order',\n  standalone: true,\n  imports: [ReactiveFormsModule],\n  template: `\n    <form [formGroup]=\"form\" (ngSubmit)=\"submit()\">\n      <select formControlName=\"type\">\n        <option value=\"standard\">Standard</option>\n        <option value=\"priority\">Priority</option>\n      </select>\n      <input formControlName=\"notes\"     placeholder=\"Notes (priority only)\" />\n      <input formControlName=\"qty\"       type=\"number\" />\n      <input formControlName=\"unitPrice\" type=\"number\" />\n      <p>Line total: {{ form.controls.lineTotal.value }}</p>\n      <p>Final total: {{ form.controls.finalTotal.value }}</p>\n      <button [disabled]=\"form.invalid\">Submit</button>\n    </form>\n  `,\n})\nexport class OrderComponent {\n  private fb = inject(FormBuilder);\n  form = this.fb.group({\n    type:       ['standard', Validators.required],\n    notes:      [''],\n    qty:        [1, [Validators.required, Validators.min(1)]],\n    unitPrice:  [0, [Validators.required, Validators.min(0)]],\n    lineTotal:  [{ value: 0, disabled: true }],\n    finalTotal: [{ value: 0, disabled: true }],\n  });\n\n  constructor() {\n    const f = this.form.controls;\n\n    f.type.valueChanges.subscribe(t => {\n      if (t === 'priority') f.notes.setValidators([Validators.required]);\n      else                  f.notes.clearValidators();\n      f.notes.updateValueAndValidity();\n    });\n\n    const recalc = () => {\n      const line  = (f.qty.value ?? 0) * (f.unitPrice.value ?? 0);\n      const final = line > 1000 ? line * 0.9 : line;\n      f.lineTotal.setValue(line,  { emitEvent: false });\n      f.finalTotal.setValue(final, { emitEvent: false });\n    };\n    f.qty.valueChanges.subscribe(recalc);\n    f.unitPrice.valueChanges.subscribe(recalc);\n  }\n\n  submit() { console.log(this.form.getRawValue()); }\n}\n```"
+          }
+        },
+        {
+          "level": 4,
+          "title": "HTTP + forms",
+          "summary": "HttpClient, populating selects from an API, loading/error states, submit.",
+          "practical": {
+            "title": "Create-user form wired to an API",
+            "scenario": "Build a form to create a user. The `role` dropdown loads from `GET /api/roles` (returns `{ id, label }[]`). Show a spinner while loading. On submit, POST the form to `/api/users`. Disable Submit while the request is in-flight. Show a green success message on 2xx, a red error message on failure. Stretch: add a 'Retry' button on the roles load if it fails.",
+            "hints": [
+              "Bootstrap with `provideHttpClient()`.",
+              "Use a `state` signal: `'loading' | 'ready' | 'error'`.",
+              "`http.post('/api/users', this.form.value)` — `form.value` is already a plain object."
+            ],
+            "solution": "```ts\nimport { Component, inject, signal } from '@angular/core';\nimport { HttpClient } from '@angular/common/http';\nimport { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';\n\ninterface Role { id: string; label: string; }\n\n@Component({\n  selector: 'app-create-user',\n  standalone: true,\n  imports: [ReactiveFormsModule],\n  template: `\n    <form [formGroup]=\"form\" (ngSubmit)=\"submit()\">\n      <input formControlName=\"name\" placeholder=\"Name\" />\n\n      @if (rolesState() === 'loading') { <p>Loading roles…</p> }\n      @else if (rolesState() === 'error') {\n        <p>Couldn't load roles. <button type=\"button\" (click)=\"loadRoles()\">Retry</button></p>\n      }\n      @else {\n        <select formControlName=\"roleId\">\n          @for (r of roles(); track r.id) {\n            <option [value]=\"r.id\">{{ r.label }}</option>\n          }\n        </select>\n      }\n\n      <button [disabled]=\"form.invalid || submitting()\">\n        {{ submitting() ? 'Saving…' : 'Create' }}\n      </button>\n      @if (msg()) { <p [style.color]=\"ok() ? 'green' : 'red'\">{{ msg() }}</p> }\n    </form>\n  `,\n})\nexport class CreateUserComponent {\n  private http = inject(HttpClient);\n  private fb   = inject(FormBuilder);\n\n  form = this.fb.group({\n    name:   ['', Validators.required],\n    roleId: ['', Validators.required],\n  });\n\n  roles      = signal<Role[]>([]);\n  rolesState = signal<'loading' | 'ready' | 'error'>('loading');\n  submitting = signal(false);\n  msg        = signal('');\n  ok         = signal(false);\n\n  constructor() { this.loadRoles(); }\n\n  loadRoles() {\n    this.rolesState.set('loading');\n    this.http.get<Role[]>('/api/roles').subscribe({\n      next: rs => { this.roles.set(rs); this.rolesState.set('ready'); },\n      error: () => this.rolesState.set('error'),\n    });\n  }\n\n  submit() {\n    this.submitting.set(true);\n    this.http.post('/api/users', this.form.value).subscribe({\n      next: () => { this.msg.set('User created'); this.ok.set(true); },\n      error: () => { this.msg.set('Failed to create user'); this.ok.set(false); },\n      complete: () => this.submitting.set(false),\n    });\n  }\n}\n```"
+          }
+        },
+        {
+          "level": 5,
+          "title": "Async validators & reactive patterns",
+          "summary": "Async validators, debounce + switchMap, dependent dropdowns, leak-free subscriptions.",
+          "practical": {
+            "title": "Username uniqueness + dependent dropdowns",
+            "scenario": "Form has `username`, `country`, `city`. Username uses an async validator that hits `GET /api/check-username?u=...` (debounced 300ms). Country is a static list; when it changes, City reloads from `GET /api/cities?country=...` — previous in-flight request must be cancelled. Clean up all subscriptions with `takeUntilDestroyed`.",
+            "hints": [
+              "Async validator returns `Observable<ValidationErrors | null>`. The HTTP observable completes after one emission, so it's fine.",
+              "`country.valueChanges.pipe(switchMap(c => http.get('/api/cities', { params: { country: c } })))` — switchMap cancels the previous request.",
+              "`debounceTime(300)` + `distinctUntilChanged()` before the request to keep the API quiet."
+            ],
+            "solution": "```ts\nimport { Component, DestroyRef, inject, signal } from '@angular/core';\nimport { takeUntilDestroyed } from '@angular/core/rxjs-interop';\nimport { HttpClient } from '@angular/common/http';\nimport { AbstractControl, AsyncValidatorFn, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';\nimport { Observable, debounceTime, distinctUntilChanged, map, of, switchMap } from 'rxjs';\n\nfunction uniqueUsername(http: HttpClient): AsyncValidatorFn {\n  return (c: AbstractControl): Observable<ValidationErrors | null> => {\n    const v = String(c.value ?? '').trim();\n    if (!v) return of(null);\n    return http\n      .get<{ available: boolean }>('/api/check-username', { params: { u: v } })\n      .pipe(map(r => (r.available ? null : { taken: true })));\n  };\n}\n\n@Component({\n  selector: 'app-async-form',\n  standalone: true,\n  imports: [ReactiveFormsModule],\n  template: `\n    <form [formGroup]=\"form\">\n      <input formControlName=\"username\" placeholder=\"Username\" />\n      @if (form.controls.username.pending) { <small>Checking…</small> }\n      @if (form.controls.username.errors?.['taken']) { <small>Taken.</small> }\n\n      <select formControlName=\"country\">\n        <option value=\"\">Pick…</option>\n        <option value=\"EG\">Egypt</option>\n        <option value=\"AE\">UAE</option>\n      </select>\n\n      <select formControlName=\"city\">\n        @for (c of cities(); track c) { <option [value]=\"c\">{{ c }}</option> }\n      </select>\n    </form>\n  `,\n})\nexport class AsyncFormComponent {\n  private http        = inject(HttpClient);\n  private fb          = inject(FormBuilder);\n  private destroyRef  = inject(DestroyRef);\n\n  cities = signal<string[]>([]);\n\n  form = this.fb.group({\n    username: ['', { validators: [Validators.required], asyncValidators: [uniqueUsername(this.http)], updateOn: 'change' }],\n    country:  [''],\n    city:     [''],\n  });\n\n  constructor() {\n    this.form.controls.country.valueChanges\n      .pipe(\n        debounceTime(150),\n        distinctUntilChanged(),\n        switchMap(c => c ? this.http.get<string[]>('/api/cities', { params: { country: c } }) : of([])),\n        takeUntilDestroyed(this.destroyRef),\n      )\n      .subscribe(list => this.cities.set(list));\n  }\n}\n```"
+          }
+        }
+      ]
     }
   },
   "questions": [
@@ -2669,6 +2849,1290 @@
       },
       "year": 2025,
       "source": "canon"
+    },
+    {
+      "id": "forms-p1-01",
+      "topic": "forms",
+      "difficulty": "L1",
+      "mode": "mcq",
+      "xp": 10,
+      "tags": [
+        "reactive-forms",
+        "basics"
+      ],
+      "path": "forms-http-v1",
+      "level": 1,
+      "order": 1,
+      "track": "angular",
+      "question": "What's the difference between `FormGroup` and `FormControl` in reactive forms?",
+      "options": [
+        {
+          "id": "a",
+          "text": "`FormControl` tracks a single input's value + state; `FormGroup` is a keyed collection of controls treated as one unit."
+        },
+        {
+          "id": "b",
+          "text": "`FormGroup` is template-driven; `FormControl` is reactive."
+        },
+        {
+          "id": "c",
+          "text": "`FormGroup` is for arrays; `FormControl` is for objects."
+        },
+        {
+          "id": "d",
+          "text": "They are aliases for the same class."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. A `FormControl` is one field. A `FormGroup` composes many controls — its `.value` is an object keyed by control name; its validity is `false` if any child is invalid.",
+        "b": "Wrong. Both are part of the reactive forms API.",
+        "c": "Wrong. The array equivalent is `FormArray`.",
+        "d": "Wrong. They're distinct primitives with different responsibilities."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p1-02",
+      "topic": "forms",
+      "difficulty": "L1",
+      "mode": "mcq",
+      "xp": 10,
+      "tags": [
+        "reactive-forms",
+        "binding"
+      ],
+      "path": "forms-http-v1",
+      "level": 1,
+      "order": 2,
+      "track": "angular",
+      "question": "You have a standalone `FormControl` instance. How do you bind it to an `<input>` in the template?",
+      "options": [
+        {
+          "id": "a",
+          "text": "`<input [formControl]=\"myControl\" />`"
+        },
+        {
+          "id": "b",
+          "text": "`<input [(ngModel)]=\"myControl\" />`"
+        },
+        {
+          "id": "c",
+          "text": "`<input [value]=\"myControl\" />`"
+        },
+        {
+          "id": "d",
+          "text": "`<input (input)=\"myControl\" />`"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `[formControl]` is the reactive-forms directive that wires the input to the `FormControl` instance both ways.",
+        "b": "Wrong. `ngModel` is template-driven; binding it to a `FormControl` won't work.",
+        "c": "Wrong. `[value]` is one-way and doesn't talk to the control.",
+        "d": "Wrong. That's an event binding, not a value binding."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p1-03",
+      "topic": "forms",
+      "difficulty": "L1",
+      "mode": "mcq",
+      "xp": 10,
+      "tags": [
+        "reactive-forms",
+        "FormGroup"
+      ],
+      "path": "forms-http-v1",
+      "level": 1,
+      "order": 3,
+      "track": "angular",
+      "question": "Inside a `<form [formGroup]=\"form\">`, how do you bind to a child control named `email`?",
+      "options": [
+        {
+          "id": "a",
+          "text": "`<input formControlName=\"email\" />`"
+        },
+        {
+          "id": "b",
+          "text": "`<input [formControl]=\"email\" />`"
+        },
+        {
+          "id": "c",
+          "text": "`<input name=\"email\" />`"
+        },
+        {
+          "id": "d",
+          "text": "`<input [ngModel]=\"email\" />`"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `formControlName` looks up the child by key inside the parent `FormGroup`.",
+        "b": "Wrong. `[formControl]` expects an instance, not a name — and it's not what you use inside a `formGroup` context.",
+        "c": "Wrong. `name` is the native HTML attribute, not the reactive-forms binding.",
+        "d": "Wrong. `ngModel` is the template-driven API."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p1-04",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "onChange",
+        "valueChanges"
+      ],
+      "path": "forms-http-v1",
+      "level": 1,
+      "order": 4,
+      "track": "angular",
+      "question": "You want to run logic every time the value of a reactive form control changes. The idiomatic way is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Subscribe to `control.valueChanges` — it's an Observable that emits the new value on every change."
+        },
+        {
+          "id": "b",
+          "text": "Bind `(change)` on the input — it fires on every keystroke."
+        },
+        {
+          "id": "c",
+          "text": "Bind `(ngModelChange)` — it's the reactive-forms event hook."
+        },
+        {
+          "id": "d",
+          "text": "Read `control.value` in a setInterval."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `valueChanges` is the reactive-forms equivalent of an 'onChange' for a control. It's an Observable, so subscribe (and unsubscribe) properly.",
+        "b": "Wrong. Native `change` only fires on blur for text inputs, not per keystroke.",
+        "c": "Wrong. `ngModelChange` belongs to the template-driven `ngModel` directive.",
+        "d": "Wrong. Polling is never the answer here."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p1-05",
+      "topic": "forms",
+      "difficulty": "L1",
+      "mode": "mcq",
+      "xp": 10,
+      "tags": [
+        "disable",
+        "enable"
+      ],
+      "path": "forms-http-v1",
+      "level": 1,
+      "order": 5,
+      "track": "angular",
+      "question": "You need to programmatically disable a reactive `FormControl`. The correct way is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`control.disable()` (and `control.enable()` to re-enable)."
+        },
+        {
+          "id": "b",
+          "text": "Add `[disabled]=\"true\"` to the input element."
+        },
+        {
+          "id": "c",
+          "text": "Set `control.value = null`."
+        },
+        {
+          "id": "d",
+          "text": "Call `control.setValidators(null)`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Reactive forms own the disabled state. Disabled controls are excluded from `form.value` (use `getRawValue()` if you still need them).",
+        "b": "Wrong. Angular logs a warning if you set `[disabled]` on a reactive-bound input — it bypasses the form model.",
+        "c": "Wrong. Clearing the value doesn't disable the control.",
+        "d": "Wrong. Clearing validators only affects validation, not the disabled state."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p1-06",
+      "topic": "forms",
+      "difficulty": "L1",
+      "mode": "mcq",
+      "xp": 10,
+      "tags": [
+        "FormBuilder"
+      ],
+      "path": "forms-http-v1",
+      "level": 1,
+      "order": 6,
+      "track": "angular",
+      "question": "What does `FormBuilder` give you over constructing `new FormGroup(...)` by hand?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Less boilerplate — `fb.group({ name: '', email: '' })` instead of wrapping each value in `new FormControl(...)`."
+        },
+        {
+          "id": "b",
+          "text": "Automatic validation against a schema."
+        },
+        {
+          "id": "c",
+          "text": "Built-in HTTP submission."
+        },
+        {
+          "id": "d",
+          "text": "Required for typed forms."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `FormBuilder` is a sugar layer that returns the same `FormGroup`/`FormControl` instances with less ceremony.",
+        "b": "Wrong. You still wire validators yourself.",
+        "c": "Wrong. `FormBuilder` has nothing to do with HTTP.",
+        "d": "Wrong. Typed forms work fine with raw constructors."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p2-01",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "validators",
+        "built-in"
+      ],
+      "path": "forms-http-v1",
+      "level": 2,
+      "order": 1,
+      "track": "angular",
+      "question": "Which line creates a required text control with a max length of 50?",
+      "options": [
+        {
+          "id": "a",
+          "text": "`new FormControl('', [Validators.required, Validators.maxLength(50)])`"
+        },
+        {
+          "id": "b",
+          "text": "`new FormControl('', { required: true, maxLength: 50 })`"
+        },
+        {
+          "id": "c",
+          "text": "`new FormControl('', Validators.required, Validators.maxLength(50))`"
+        },
+        {
+          "id": "d",
+          "text": "`new FormControl('').required().maxLength(50)`"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Sync validators go in an array as the 2nd argument. Async validators are the 3rd argument.",
+        "b": "Wrong. The 2nd argument is a validator (or array) or an options object — not a plain key/value of HTML attrs.",
+        "c": "Wrong. The 3rd positional argument is the async validator list, not another sync validator.",
+        "d": "Wrong. `FormControl` doesn't expose a fluent validator API."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p2-02",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "custom-validator"
+      ],
+      "path": "forms-http-v1",
+      "level": 2,
+      "order": 2,
+      "track": "angular",
+      "question": "A custom synchronous validator function should return:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`null` when valid; an errors object like `{ tooShort: true }` when invalid."
+        },
+        {
+          "id": "b",
+          "text": "`true` when valid; `false` when invalid."
+        },
+        {
+          "id": "c",
+          "text": "Throw an `Error` when invalid; return nothing otherwise."
+        },
+        {
+          "id": "d",
+          "text": "An `Observable<boolean>` either way."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The errors object is merged into `control.errors`. Returning `null` means valid.",
+        "b": "Wrong. Angular checks for `null` vs. an object, not a boolean.",
+        "c": "Wrong. Validators never throw — they return.",
+        "d": "Wrong. That's an async validator. Sync validators return synchronously."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p2-03",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "custom-validator",
+        "signature"
+      ],
+      "path": "forms-http-v1",
+      "level": 2,
+      "order": 3,
+      "track": "angular",
+      "question": "Which is the correct signature for a custom sync validator?",
+      "options": [
+        {
+          "id": "a",
+          "text": "`(control: AbstractControl) => ValidationErrors | null`"
+        },
+        {
+          "id": "b",
+          "text": "`(value: string) => boolean`"
+        },
+        {
+          "id": "c",
+          "text": "`(control: FormControl, errors: object) => void`"
+        },
+        {
+          "id": "d",
+          "text": "`(control: AbstractControl) => Promise<boolean>`"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. This is `ValidatorFn`. Reading from `control.value` is enough for most cases.",
+        "b": "Wrong. You won't have access to siblings, status, or other control state.",
+        "c": "Wrong. There's no `errors` parameter; the function returns the errors.",
+        "d": "Wrong. That's the async validator return shape (Promise or Observable)."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p2-04",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "setValidators",
+        "updateValueAndValidity"
+      ],
+      "path": "forms-http-v1",
+      "level": 2,
+      "order": 4,
+      "track": "angular",
+      "question": "You swap a control's validators at runtime with `control.setValidators([...])`. What else MUST you call?",
+      "options": [
+        {
+          "id": "a",
+          "text": "`control.updateValueAndValidity()` — otherwise `status`/`errors` won't reflect the new validators."
+        },
+        {
+          "id": "b",
+          "text": "Nothing — validators rerun automatically."
+        },
+        {
+          "id": "c",
+          "text": "`form.reset()`."
+        },
+        {
+          "id": "d",
+          "text": "`control.markAsDirty()`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `setValidators` registers them but doesn't re-evaluate. `updateValueAndValidity()` triggers the recomputation.",
+        "b": "Wrong. They run on the next value change, but the current status is stale until you ask for a recompute.",
+        "c": "Wrong. `reset` clears everything — way too aggressive.",
+        "d": "Wrong. `markAsDirty` only flips the dirty flag; it doesn't recompute validity."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p2-05",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "error-display",
+        "touched"
+      ],
+      "path": "forms-http-v1",
+      "level": 2,
+      "order": 5,
+      "track": "angular",
+      "question": "You want an error message to appear only after the user has interacted with the field. The cleanest template check is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`@if (control.touched && control.errors?.['required']) { ... }`"
+        },
+        {
+          "id": "b",
+          "text": "`@if (control.invalid) { ... }`"
+        },
+        {
+          "id": "c",
+          "text": "`@if (control.value === '') { ... }`"
+        },
+        {
+          "id": "d",
+          "text": "`@if (control.dirty || control.errors) { ... }`"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `touched` flips after blur. Pairing it with a specific error key avoids showing errors on a fresh form.",
+        "b": "Wrong. `invalid` is `true` from the start for required-empty fields — you'd show errors immediately.",
+        "c": "Wrong. Comparing values manually duplicates what the validator is already telling you.",
+        "d": "Wrong. `control.errors` is truthy on a fresh empty required field — same problem as (b)."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p2-06",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "form.invalid"
+      ],
+      "path": "forms-http-v1",
+      "level": 2,
+      "order": 6,
+      "track": "angular",
+      "question": "`form.invalid` returns `true` when:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Any non-disabled child control has errors — regardless of `touched`/`dirty` state."
+        },
+        {
+          "id": "b",
+          "text": "The user has clicked submit on a form with errors."
+        },
+        {
+          "id": "c",
+          "text": "Only when at least one control is both `touched` and has errors."
+        },
+        {
+          "id": "d",
+          "text": "Only when `form.value` is empty."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Validity is computed from validators; interaction flags (touched/dirty) are separate concerns used to gate UI.",
+        "b": "Wrong. Validity has nothing to do with submission.",
+        "c": "Wrong. That's a common UI condition you build yourself, not what `invalid` means.",
+        "d": "Wrong. Empty doesn't imply invalid unless validators say so."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p3-01",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "cross-field-validator",
+        "group-validator"
+      ],
+      "path": "forms-http-v1",
+      "level": 3,
+      "order": 1,
+      "track": "angular",
+      "question": "You need a validator that ensures `password === confirmPassword`. Where do you attach it?",
+      "options": [
+        {
+          "id": "a",
+          "text": "To the parent `FormGroup` — it gets the group as its `AbstractControl` so it can read both children."
+        },
+        {
+          "id": "b",
+          "text": "To both `password` and `confirmPassword` controls separately."
+        },
+        {
+          "id": "c",
+          "text": "To the `<form>` element via `(ngSubmit)` and check there."
+        },
+        {
+          "id": "d",
+          "text": "On `FormControl.confirm()`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. A group-level validator sees `group.get('password')?.value` and `group.get('confirmPassword')?.value` and returns `{ mismatch: true }` on the group.",
+        "b": "Wrong. Each individual control only sees itself. You'd need a workaround using sibling refs — messier than group-level.",
+        "c": "Wrong. Submit-time checking misses real-time UI feedback.",
+        "d": "Wrong. No such API exists."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p3-02",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "conditional-validators"
+      ],
+      "path": "forms-http-v1",
+      "level": 3,
+      "order": 2,
+      "track": "angular",
+      "question": "Field `notes` should be required only when `type === 'priority'`. The cleanest implementation is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Subscribe to `type.valueChanges` and `setValidators` / `clearValidators` on `notes`, followed by `updateValueAndValidity()`."
+        },
+        {
+          "id": "b",
+          "text": "Wrap the `notes` input in `*ngIf` so it doesn't exist when not needed."
+        },
+        {
+          "id": "c",
+          "text": "Add `Validators.required` always and check `type` in the submit handler."
+        },
+        {
+          "id": "d",
+          "text": "Override `form.controls.notes.validator` directly without calling any update method."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. This keeps the validator wiring inside the form model, where the rest of your status/errors logic lives.",
+        "b": "Wrong. Removing the input from the DOM doesn't change form validity — the control still exists in the model.",
+        "c": "Wrong. The form will be `invalid` whenever `notes` is empty, even for `standard` orders.",
+        "d": "Wrong. Mutating `.validator` directly bypasses framework APIs and doesn't trigger a re-evaluation."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p3-03",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "calculated-fields",
+        "emitEvent"
+      ],
+      "path": "forms-http-v1",
+      "level": 3,
+      "order": 3,
+      "track": "angular",
+      "question": "You compute `total = qty * unitPrice` inside a subscription to `qty.valueChanges`. Setting `total` without re-triggering its own subscribers requires:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`total.setValue(qty * price, { emitEvent: false })`"
+        },
+        {
+          "id": "b",
+          "text": "`total.setValue(qty * price)`"
+        },
+        {
+          "id": "c",
+          "text": "`total.patchValue(qty * price)`"
+        },
+        {
+          "id": "d",
+          "text": "`total.updateValueAndValidity()`"
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `{ emitEvent: false }` suppresses the `valueChanges` emission, breaking potential subscriber loops and saving renders.",
+        "b": "Wrong. This emits — fine if no subscriber acts on `total`, dangerous otherwise.",
+        "c": "Wrong. `patchValue` also emits by default. Same risk as (b).",
+        "d": "Wrong. That recomputes validity; it doesn't set a value."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p3-04",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "markAllAsTouched"
+      ],
+      "path": "forms-http-v1",
+      "level": 3,
+      "order": 4,
+      "track": "angular",
+      "question": "User clicks Submit on an invalid form, but no error messages show because controls aren't `touched`. The fix is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Call `form.markAllAsTouched()` inside the submit handler before the validity check."
+        },
+        {
+          "id": "b",
+          "text": "Drop the `touched` check in templates and always show errors."
+        },
+        {
+          "id": "c",
+          "text": "Call `form.reset()` to flip every flag."
+        },
+        {
+          "id": "d",
+          "text": "Wrap the submit in a setTimeout so Angular re-renders."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `markAllAsTouched` flips every nested control to `touched`, which then surfaces all gated error messages.",
+        "b": "Wrong. You'd see errors on a freshly opened form — bad UX.",
+        "c": "Wrong. `reset` wipes values too.",
+        "d": "Wrong. Timing has nothing to do with the `touched` flag."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p3-05",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "disable",
+        "getRawValue"
+      ],
+      "path": "forms-http-v1",
+      "level": 3,
+      "order": 5,
+      "track": "angular",
+      "question": "A read-only calculated control (`lineTotal`) is disabled in the form. Submitting `form.value` to the API — what does the payload contain?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Everything except `lineTotal`. Disabled controls are excluded from `.value`. Use `form.getRawValue()` to include them."
+        },
+        {
+          "id": "b",
+          "text": "Everything including `lineTotal` — disabled only affects UI."
+        },
+        {
+          "id": "c",
+          "text": "Only `lineTotal`."
+        },
+        {
+          "id": "d",
+          "text": "Throws an error at submit time."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. This is a common gotcha. `getRawValue()` is the escape hatch when you want disabled values in the payload.",
+        "b": "Wrong. Disabled controls are skipped by `.value` — that's the whole point.",
+        "c": "Wrong. Nope, the opposite.",
+        "d": "Wrong. There's no error — the field is silently missing."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p3-06",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "FormArray"
+      ],
+      "path": "forms-http-v1",
+      "level": 3,
+      "order": 6,
+      "track": "angular",
+      "question": "User can add multiple `items` to an order, each with `qty` and `unitPrice`. Model this with:",
+      "options": [
+        {
+          "id": "a",
+          "text": "A `FormArray` of `FormGroup`s — push a new group on 'Add item', remove with `removeAt(i)`."
+        },
+        {
+          "id": "b",
+          "text": "A single `FormGroup` with dynamically named keys like `qty_1`, `qty_2`."
+        },
+        {
+          "id": "c",
+          "text": "A plain `Array` in the component, mirrored to the form on submit."
+        },
+        {
+          "id": "d",
+          "text": "A `FormControl` whose value is the array."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `FormArray` is built for variable-length collections of controls or groups. It tracks validity, touched/dirty per item, and renders cleanly with `@for`.",
+        "b": "Wrong. Dynamic key names defeat type safety and make iteration awkward.",
+        "c": "Wrong. You lose all the per-row validation/state benefits of forms.",
+        "d": "Wrong. A single control can't track per-item validity."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p4-01",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "HttpClient",
+        "observable"
+      ],
+      "path": "forms-http-v1",
+      "level": 4,
+      "order": 1,
+      "track": "angular",
+      "question": "`this.http.get<User[]>('/api/users')` returns:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`Observable<User[]>` — the request only fires when you subscribe (or pipe through `async`)."
+        },
+        {
+          "id": "b",
+          "text": "`Promise<User[]>` — already firing."
+        },
+        {
+          "id": "c",
+          "text": "`User[]` directly."
+        },
+        {
+          "id": "d",
+          "text": "Always `Observable<HttpResponse<User[]>>`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Angular `HttpClient` is cold-observable based. No subscribe → no request.",
+        "b": "Wrong. It's an Observable, not a Promise.",
+        "c": "Wrong. HTTP is async — you never get the raw array synchronously.",
+        "d": "Wrong. The full `HttpResponse` only appears if you pass `{ observe: 'response' }`."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p4-02",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "provideHttpClient",
+        "standalone"
+      ],
+      "path": "forms-http-v1",
+      "level": 4,
+      "order": 2,
+      "track": "angular",
+      "question": "In a standalone Angular app, the correct way to set up `HttpClient` is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pass `provideHttpClient()` to `bootstrapApplication`'s `providers`."
+        },
+        {
+          "id": "b",
+          "text": "Import `HttpClientModule` into every component that uses it."
+        },
+        {
+          "id": "c",
+          "text": "Call `new HttpClient()` in your service's constructor."
+        },
+        {
+          "id": "d",
+          "text": "Nothing — `HttpClient` is globally available."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `provideHttpClient()` is the standalone-era provider. You can compose it with `withInterceptors([...])`, `withFetch()`, etc.",
+        "b": "Wrong. `HttpClientModule` is the NgModule-era API and is being deprecated in favor of the provider.",
+        "c": "Wrong. `HttpClient` is DI-only — never `new` it.",
+        "d": "Wrong. It needs to be provided once."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p4-03",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "async-pipe",
+        "select-from-api"
+      ],
+      "path": "forms-http-v1",
+      "level": 4,
+      "order": 3,
+      "track": "angular",
+      "question": "Populating a `<select>` with options from an API. The cleanest template pattern is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "Expose `options$ = http.get<Option[]>(...)` and render with `@for (o of options$ | async; track o.id) { <option ...> }`."
+        },
+        {
+          "id": "b",
+          "text": "Subscribe in `ngOnInit`, store in `this.options`, iterate `this.options`. (Works but you manage the subscription manually.)"
+        },
+        {
+          "id": "c",
+          "text": "Fire the request inside a getter — runs on every change detection cycle."
+        },
+        {
+          "id": "d",
+          "text": "Use `fetch()` directly inside the template."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `async` pipe handles subscribe + unsubscribe + change detection for you. With signals you'd do the same with a signal of the result.",
+        "b": "Workable, but you take on manual lifecycle. Fine when you need to transform the data before display.",
+        "c": "Wrong. A getter runs every CD tick — you'd hammer the API.",
+        "d": "Wrong. `fetch` skips DI, interceptors, and any Angular HTTP plumbing."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p4-04",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "loading-state",
+        "ux"
+      ],
+      "path": "forms-http-v1",
+      "level": 4,
+      "order": 4,
+      "track": "angular",
+      "question": "While the select's options are loading, you want a spinner; on failure, a retry button. The simplest state model:",
+      "options": [
+        {
+          "id": "a",
+          "text": "A `state` signal of `'loading' | 'ready' | 'error'`, and render the spinner / select / retry button via `@if` on that state."
+        },
+        {
+          "id": "b",
+          "text": "Always show the select; assume options will arrive soon."
+        },
+        {
+          "id": "c",
+          "text": "Use a 500 ms `setTimeout` to delay rendering until the request 'probably' finished."
+        },
+        {
+          "id": "d",
+          "text": "Mutate a global `loading` boolean from anywhere in the app."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. A small enum state captures all three UI cases explicitly and makes the template trivial.",
+        "b": "Wrong. The user sees a broken empty select while loading; no error path either.",
+        "c": "Wrong. Timing assumptions break under slow networks.",
+        "d": "Wrong. A global flag couples every loader and leads to flickering."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p4-05",
+      "topic": "forms",
+      "difficulty": "L2",
+      "mode": "mcq",
+      "xp": 25,
+      "tags": [
+        "POST",
+        "form.value"
+      ],
+      "path": "forms-http-v1",
+      "level": 4,
+      "order": 5,
+      "track": "angular",
+      "question": "Submitting a `FormGroup` as JSON via POST:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`http.post('/api/x', this.form.value).subscribe(...)` — `form.value` is already a plain object."
+        },
+        {
+          "id": "b",
+          "text": "`http.post('/api/x', JSON.stringify(this.form))` — stringify the whole form."
+        },
+        {
+          "id": "c",
+          "text": "Iterate the controls and `FormData.append` each entry."
+        },
+        {
+          "id": "d",
+          "text": "`http.send(this.form)`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `HttpClient` auto-serializes objects to JSON and sets the `Content-Type` header. Use `getRawValue()` if you need disabled fields too.",
+        "b": "Wrong. Don't pre-stringify — and `this.form` is a class instance, not the value.",
+        "c": "Wrong. `FormData` is for `multipart/form-data` (file uploads), not JSON APIs.",
+        "d": "Wrong. No such method."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p4-06",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "error-handling",
+        "catchError"
+      ],
+      "path": "forms-http-v1",
+      "level": 4,
+      "order": 6,
+      "track": "angular",
+      "question": "Your POST returns 500. Where do you handle the error?",
+      "options": [
+        {
+          "id": "a",
+          "text": "In the `error` callback of `.subscribe({ next, error })`, or via `catchError(...)` inside the `.pipe(...)`."
+        },
+        {
+          "id": "b",
+          "text": "Wrap the `.subscribe()` call in `try/catch`."
+        },
+        {
+          "id": "c",
+          "text": "Nothing — `HttpClient` retries automatically and recovers."
+        },
+        {
+          "id": "d",
+          "text": "Pass an `errorHandler` `@Input` to the component."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Errors travel through the Observable's error channel. `catchError` lets you recover/transform; the subscribe error callback is the final handler.",
+        "b": "Wrong. `try/catch` only catches synchronous throws; the Observable error is async.",
+        "c": "Wrong. There's no automatic retry — you'd add `retry(2)` yourself.",
+        "d": "Wrong. There's no such convention in Angular."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p5-01",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "async-validator",
+        "signature"
+      ],
+      "path": "forms-http-v1",
+      "level": 5,
+      "order": 1,
+      "track": "angular",
+      "question": "An async validator's signature is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`(c: AbstractControl) => Observable<ValidationErrors | null> | Promise<ValidationErrors | null>`"
+        },
+        {
+          "id": "b",
+          "text": "Exactly the same as a sync validator."
+        },
+        {
+          "id": "c",
+          "text": "`async (c: AbstractControl) => boolean`"
+        },
+        {
+          "id": "d",
+          "text": "It returns `void` and mutates `c.errors`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. The Observable/Promise must emit/resolve once and complete. `null` means valid.",
+        "b": "Wrong. Sync validators return synchronously; async validators must return a Promise or Observable.",
+        "c": "Wrong. The return shape is the errors object (or null), not a boolean.",
+        "d": "Wrong. Validators never mutate `errors` directly."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p5-02",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "async-validator",
+        "registration"
+      ],
+      "path": "forms-http-v1",
+      "level": 5,
+      "order": 2,
+      "track": "angular",
+      "question": "Where do async validators go in the `FormControl` constructor?",
+      "options": [
+        {
+          "id": "a",
+          "text": "Third positional argument: `new FormControl(value, [syncValidators], [asyncValidators])` — or the `asyncValidators` key in the options-object form."
+        },
+        {
+          "id": "b",
+          "text": "Second argument, mixed in with the sync validators."
+        },
+        {
+          "id": "c",
+          "text": "They must be registered through `setAsyncValidators` only — no constructor support."
+        },
+        {
+          "id": "d",
+          "text": "Wrap the sync validator in an Observable and pass it in the sync slot."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Async validators are a separate slot so Angular knows to await them and toggle `pending` status.",
+        "b": "Wrong. Angular treats the sync slot as synchronous and won't wait for Promises/Observables there.",
+        "c": "Wrong. Constructor and `setAsyncValidators` both work.",
+        "d": "Wrong. That's a hack and breaks the validity pipeline."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p5-03",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "debounceTime",
+        "distinctUntilChanged"
+      ],
+      "path": "forms-http-v1",
+      "level": 5,
+      "order": 3,
+      "track": "angular",
+      "question": "Check username uniqueness as the user types — without spamming the server. Pattern:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`valueChanges.pipe(debounceTime(300), distinctUntilChanged(), switchMap(v => api.check(v)))`"
+        },
+        {
+          "id": "b",
+          "text": "Subscribe directly and let the backend throttle."
+        },
+        {
+          "id": "c",
+          "text": "Call `api.check` on every `keyup` event."
+        },
+        {
+          "id": "d",
+          "text": "`setInterval(() => api.check(...), 1000)`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `debounceTime` waits for typing to settle, `distinctUntilChanged` skips no-op emits, `switchMap` cancels the previous request when the value changes again.",
+        "b": "Wrong. Putting the burden on the backend is wasteful — fire fewer requests upstream.",
+        "c": "Wrong. Hammering the API per keystroke is exactly what you want to avoid.",
+        "d": "Wrong. Polling has nothing to do with input-driven validation."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p5-04",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "switchMap",
+        "dependent-dropdowns"
+      ],
+      "path": "forms-http-v1",
+      "level": 5,
+      "order": 4,
+      "track": "angular",
+      "question": "For Country → City dependent dropdowns, you use `switchMap` (not `mergeMap`) because:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`switchMap` cancels the previous in-flight request when a new country is picked — only the latest city list matters."
+        },
+        {
+          "id": "b",
+          "text": "`switchMap` runs both requests in parallel and merges the results."
+        },
+        {
+          "id": "c",
+          "text": "`switchMap` batches multiple emits into one."
+        },
+        {
+          "id": "d",
+          "text": "`switchMap` is the only RxJS operator that returns an Observable."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. Cancellation prevents the previous country's late response from overwriting the current selection's response.",
+        "b": "Wrong. That's `mergeMap` (and it would cause race conditions here).",
+        "c": "Wrong. Batching is what buffering operators do; `switchMap` doesn't buffer.",
+        "d": "Wrong. `mergeMap`, `concatMap`, `exhaustMap` all return Observables too."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p5-05",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "pending",
+        "async-validator-status"
+      ],
+      "path": "forms-http-v1",
+      "level": 5,
+      "order": 5,
+      "track": "angular",
+      "question": "While an async validator is running, `control.status` is:",
+      "options": [
+        {
+          "id": "a",
+          "text": "`'PENDING'` — and `control.pending` is `true`. Use this to show a 'Checking…' indicator."
+        },
+        {
+          "id": "b",
+          "text": "`'INVALID'` until it resolves."
+        },
+        {
+          "id": "c",
+          "text": "`'VALID'` optimistically."
+        },
+        {
+          "id": "d",
+          "text": "Unchanged — async validators don't affect status."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `pending` is a built-in flag exactly for spinner UX while async validation is in-flight.",
+        "b": "Wrong. INVALID would mean it already failed.",
+        "c": "Wrong. The form is neither valid nor invalid yet — it's pending.",
+        "d": "Wrong. They flip the status to `PENDING` and back."
+      },
+      "year": 2025,
+      "source": "canon"
+    },
+    {
+      "id": "forms-p5-06",
+      "topic": "forms",
+      "difficulty": "L3",
+      "mode": "mcq",
+      "xp": 50,
+      "tags": [
+        "takeUntilDestroyed",
+        "memory-leak"
+      ],
+      "path": "forms-http-v1",
+      "level": 5,
+      "order": 6,
+      "track": "angular",
+      "question": "To prevent memory leaks from `valueChanges` subscriptions inside a component (Angular 16+):",
+      "options": [
+        {
+          "id": "a",
+          "text": "Pipe with `takeUntilDestroyed(this.destroyRef)` — or fall back to manual unsubscribe in `ngOnDestroy`."
+        },
+        {
+          "id": "b",
+          "text": "Set `this.subscription = null` in `ngOnDestroy`."
+        },
+        {
+          "id": "c",
+          "text": "Angular auto-unsubscribes from `valueChanges` for you."
+        },
+        {
+          "id": "d",
+          "text": "Pass `{ destroy: true }` as an option to `subscribe`."
+        }
+      ],
+      "correct": "a",
+      "explanations": {
+        "a": "Correct. `takeUntilDestroyed` ties the Observable's lifetime to the component / DestroyRef. The classic alternative is a `Subject` + `takeUntil` pair.",
+        "b": "Wrong. Nulling the reference doesn't unsubscribe.",
+        "c": "Wrong. There's no auto-unsubscribe for arbitrary observables.",
+        "d": "Wrong. `subscribe` has no such option."
+      },
+      "year": 2025,
+      "source": "canon"
     }
   ]
 }
@@ -2694,10 +4158,11 @@ const WELCOME_KEY = 'interview-game-seen-welcome-v1';
 // =============================
 // STATE
 // =============================
-let BANK = { topics: {}, questions: [] };
+let BANK = { topics: {}, questions: [], paths: {} };
 let PROGRESS = null;
 let SESSION = null;
 let TRACK_FILTER = 'all'; // 'all' | 'ui' | 'angular' — Topic Drill filter chip state
+let ACTIVE_PATH_ID = null; // remembered while user is inside path / level / practical views
 
 const TRACK_META = {
   ui:      { label: 'UI',      emoji: '🎨', pillClass: 'bg-pink-500/20 text-pink-300' },
@@ -2744,17 +4209,25 @@ async function loadBank() {
     // file:// or fetch blocked — use embedded
   }
 
-  BANK = { topics: embeddedBank.topics, questions };
+  BANK = { topics: embeddedBank.topics, questions, paths: embeddedBank.paths || {} };
 }
+
+function isPathQuestion(q) { return !!q.path; }
 
 // =============================
 // PROGRESS
 // =============================
+function defaultPathProgress() {
+  return { currentLevel: 1, completed: [], bestScores: {}, practicalsViewed: [] };
+}
+
 function defaultProgress() {
   const mastery = {};
   for (const t of Object.keys(BANK.topics)) {
     mastery[t] = { tier: null, l2_plus: 0, l3_plus: 0, l4_plus: 0, boss_complete: false };
   }
+  const paths = {};
+  for (const pid of Object.keys(BANK.paths || {})) paths[pid] = defaultPathProgress();
   return {
     schema_version: 2,
     player: {
@@ -2766,6 +4239,7 @@ function defaultProgress() {
       last_session_date: null,
     },
     mastery,
+    paths,
     questions: {},
     history: [],
     wrong_review: [],
@@ -2786,6 +4260,11 @@ function loadProgress() {
       if (!PROGRESS.mastery[t]) {
         PROGRESS.mastery[t] = { tier: null, l2_plus: 0, l3_plus: 0, l4_plus: 0, boss_complete: false };
       }
+    }
+    // ensure paths present (migration for pre-path saves)
+    if (!PROGRESS.paths) PROGRESS.paths = {};
+    for (const pid of Object.keys(BANK.paths || {})) {
+      if (!PROGRESS.paths[pid]) PROGRESS.paths[pid] = defaultPathProgress();
     }
   } catch (e) {
     PROGRESS = defaultProgress();
@@ -2901,7 +4380,14 @@ function matchesTrack(q, track) {
 }
 
 function pickQuestions(mode, opts = {}) {
-  const all = BANK.questions;
+  // path mode keeps path Qs; every other mode hides them so the path content
+  // doesn't bleed into Daily / Drill / Boss / Mock pools.
+  if (mode === 'path') {
+    return BANK.questions
+      .filter(q => q.path === opts.pathId && q.level === opts.level)
+      .sort((a, b) => (a.order || 0) - (b.order || 0));
+  }
+  const all = BANK.questions.filter(q => !isPathQuestion(q));
   if (mode === 'drill') {
     return all.filter(q => q.topic === opts.topic).slice(0, 20);
   }
@@ -3038,6 +4524,8 @@ function startSession(mode, opts = {}) {
     mode,
     topic: opts.topic || null,
     track: opts.track || null,
+    pathId: opts.pathId || null,
+    pathLevel: opts.level || null,
     questions: qs,
     idx: 0,
     correctCount: 0,
@@ -3067,11 +4555,15 @@ function renderQuiz() {
   SESSION.lastGradeKey = null;
 
   $('quiz-progress').textContent = `Q ${SESSION.idx + 1} / ${SESSION.questions.length}`;
-  const baseModeLabel = ({ daily: 'Daily Practice', drill: 'Topic Drill', boss: 'Boss Round', mock: 'Mock Interview' })[SESSION.mode];
-  const trackSuffix = (SESSION.mode === 'mock' && SESSION.track && TRACK_META[SESSION.track])
-    ? ` · ${TRACK_META[SESSION.track].emoji} ${TRACK_META[SESSION.track].label} Track`
-    : '';
-  $('quiz-mode-label').textContent = baseModeLabel + trackSuffix;
+  const baseModeLabel = ({ daily: 'Daily Practice', drill: 'Topic Drill', boss: 'Boss Round', mock: 'Mock Interview', path: 'Guided Path' })[SESSION.mode];
+  let suffix = '';
+  if (SESSION.mode === 'mock' && SESSION.track && TRACK_META[SESSION.track]) {
+    suffix = ` · ${TRACK_META[SESSION.track].emoji} ${TRACK_META[SESSION.track].label} Track`;
+  } else if (SESSION.mode === 'path' && SESSION.pathId && BANK.paths[SESSION.pathId]) {
+    const p = BANK.paths[SESSION.pathId];
+    suffix = ` · ${p.emoji || '📈'} ${p.label} · Level ${SESSION.pathLevel}`;
+  }
+  $('quiz-mode-label').textContent = baseModeLabel + suffix;
   $('quiz-topic').textContent = BANK.topics[q.topic]?.label || q.topic;
   $('quiz-difficulty').textContent = q.difficulty;
   $('quiz-xp').textContent = `${q.xp} XP`;
@@ -3416,6 +4908,9 @@ function applyVerdict(q, verdict, xpEarned) {
 }
 
 function endSession() {
+  if (SESSION.mode === 'path') {
+    return endPathLevel();
+  }
   $('session-correct').textContent = SESSION.correctCount;
   $('session-xp').textContent = `+${SESSION.xpEarned}`;
   $('session-best-streak').textContent = SESSION.bestStreakInSession;
@@ -3434,6 +4929,173 @@ function endSession() {
   }
   SESSION = null;
   show('view-session-end');
+}
+
+// =============================
+// GUIDED PATHS
+// =============================
+function getPath(pathId) { return BANK.paths[pathId] || null; }
+function getLevel(pathId, lvl) {
+  const p = getPath(pathId);
+  if (!p) return null;
+  return p.levels.find(L => L.level === lvl) || null;
+}
+function pathProgress(pathId) {
+  if (!PROGRESS.paths) PROGRESS.paths = {};
+  if (!PROGRESS.paths[pathId]) PROGRESS.paths[pathId] = defaultPathProgress();
+  return PROGRESS.paths[pathId];
+}
+
+function renderPathPicker() {
+  const list = $('path-list');
+  list.innerHTML = '';
+  const entries = Object.entries(BANK.paths || {});
+  if (entries.length === 0) {
+    list.innerHTML = '<div class="text-slate-500 p-6">No guided paths available yet.</div>';
+    show('view-path-picker');
+    return;
+  }
+  for (const [pid, p] of entries) {
+    const pp = pathProgress(pid);
+    const total = p.levels.length;
+    const passed = pp.completed.length;
+    list.insertAdjacentHTML('beforeend', `
+      <button class="path-pick text-left p-6 rounded-2xl bg-gradient-to-br from-amber-600/15 to-orange-600/10 border border-amber-500/30 hover:border-amber-400 transition" data-path-id="${pid}">
+        <div class="flex items-start justify-between mb-2">
+          <div class="text-2xl">${p.emoji || '📈'}</div>
+          <div class="text-xs text-slate-400">${passed} / ${total} levels passed</div>
+        </div>
+        <div class="font-semibold text-lg mb-1">${escapeHtml(p.label)}</div>
+        <div class="text-sm text-slate-400">${escapeHtml(p.subtitle || '')}</div>
+      </button>
+    `);
+  }
+  show('view-path-picker');
+}
+
+function renderLevelPicker(pathId) {
+  const p = getPath(pathId);
+  if (!p) { renderPathPicker(); return; }
+  ACTIVE_PATH_ID = pathId;
+  const pp = pathProgress(pathId);
+  $('level-picker-title').textContent = p.label;
+  $('level-picker-subtitle').textContent = p.subtitle || '';
+  const list = $('level-list');
+  list.innerHTML = '';
+  for (const L of p.levels) {
+    const unlocked = L.level <= pp.currentLevel;
+    const passed   = pp.completed.includes(L.level);
+    const best     = pp.bestScores[L.level];
+    const practicalSeen = pp.practicalsViewed.includes(L.level);
+    const stateBadge = !unlocked
+      ? '<span class="text-xs px-2 py-1 rounded-md bg-slate-800 text-slate-500">🔒 Locked</span>'
+      : passed
+        ? `<span class="text-xs px-2 py-1 rounded-md bg-emerald-500/20 text-emerald-300">✓ Passed${best != null ? ` · best ${Math.round(best*100)}%` : ''}</span>`
+        : '<span class="text-xs px-2 py-1 rounded-md bg-violet-500/20 text-violet-300">Available</span>';
+    const cursor = unlocked ? 'hover:border-violet-500 cursor-pointer' : 'opacity-60 cursor-not-allowed';
+    const qCount = BANK.questions.filter(q => q.path === pathId && q.level === L.level).length;
+    list.insertAdjacentHTML('beforeend', `
+      <div class="level-row text-left p-4 rounded-xl bg-slate-900 border border-slate-800 ${cursor}" ${unlocked ? `data-level="${L.level}"` : ''}>
+        <div class="flex items-start justify-between gap-3 mb-1">
+          <div>
+            <div class="text-xs text-slate-500 mb-0.5">Level ${L.level}</div>
+            <div class="font-semibold">${escapeHtml(L.title)}</div>
+          </div>
+          ${stateBadge}
+        </div>
+        <div class="text-xs text-slate-400 mb-3">${escapeHtml(L.summary || '')}</div>
+        <div class="flex flex-wrap gap-2 text-xs">
+          ${unlocked ? `<button class="level-start px-3 py-1 rounded-md bg-violet-600 hover:bg-violet-500 text-white" data-level="${L.level}">${passed ? 'Replay' : 'Start'} (${qCount} Qs)</button>` : ''}
+          ${unlocked ? `<button class="level-practical px-3 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200" data-level="${L.level}">🛠️ Practical${practicalSeen ? ' ✓' : ''}</button>` : ''}
+        </div>
+      </div>
+    `);
+  }
+  show('view-level-picker');
+}
+
+function startPathLevel(pathId, level) {
+  ACTIVE_PATH_ID = pathId;
+  startSession('path', { pathId, level });
+}
+
+function endPathLevel() {
+  const pathId = SESSION.pathId;
+  const lvl    = SESSION.pathLevel;
+  const p      = getPath(pathId);
+  const total  = SESSION.questions.length;
+  const correct = SESSION.correctCount;
+  const pct    = total === 0 ? 0 : correct / total;
+  const threshold = p?.passThreshold ?? 0.8;
+  const passed = pct >= threshold;
+
+  const pp = pathProgress(pathId);
+  // record best score
+  const prevBest = pp.bestScores[lvl] ?? 0;
+  if (pct > prevBest) pp.bestScores[lvl] = pct;
+  if (passed) {
+    if (!pp.completed.includes(lvl)) pp.completed.push(lvl);
+    // unlock next level
+    const nextLvl = lvl + 1;
+    const hasNext = !!getLevel(pathId, nextLvl);
+    if (hasNext && pp.currentLevel < nextLvl) pp.currentLevel = nextLvl;
+  }
+  saveProgress();
+
+  $('path-end-emoji').textContent = passed ? (pct === 1 ? '🏆' : '🎉') : '🌱';
+  $('path-end-title').textContent = passed ? `Level ${lvl} passed` : `Level ${lvl} — not yet`;
+  $('path-end-stats').textContent = `${correct} / ${total} correct · ${Math.round(pct*100)}%`;
+  $('path-end-threshold').textContent = `Pass threshold: ${Math.round(threshold*100)}%${prevBest ? ` · best so far: ${Math.round(Math.max(prevBest, pct)*100)}%` : ''}`;
+
+  const advanceBtn = $('path-end-advance');
+  const hasNext = !!getLevel(pathId, lvl + 1);
+  if (passed && hasNext) {
+    advanceBtn.classList.remove('hidden');
+    $('path-end-advance-label').textContent = `Level ${lvl + 1} · ${getLevel(pathId, lvl + 1).title}`;
+  } else if (passed && !hasNext) {
+    advanceBtn.classList.remove('hidden');
+    $('path-end-advance-label').textContent = `Back to levels — path complete!`;
+  } else {
+    advanceBtn.classList.add('hidden');
+  }
+
+  SESSION = null;
+  renderTopBar();
+  show('view-path-level-end');
+}
+
+function renderPractical(pathId, level, opts = {}) {
+  const p = getPath(pathId);
+  const L = getLevel(pathId, level);
+  if (!p || !L || !L.practical) return;
+  ACTIVE_PATH_ID = pathId;
+  const pr = L.practical;
+  $('practical-title').textContent = pr.title || `Level ${level} practical`;
+  $('practical-level-label').textContent = `${p.label} · Level ${level} — ${L.title}`;
+  $('practical-scenario').innerHTML = md(pr.scenario || '');
+  const hintsEl = $('practical-hints');
+  hintsEl.innerHTML = '';
+  for (const h of (pr.hints || [])) {
+    hintsEl.insertAdjacentHTML('beforeend', `<li>${md(h)}</li>`);
+  }
+  $('practical-solution').innerHTML = md(pr.solution || '');
+  $('practical-solution-wrap').classList.add('hidden');
+  $('practical-solution-hint').classList.remove('hidden');
+  $('practical-reveal-btn').textContent = 'Reveal';
+  $('practical-reveal-btn').disabled = false;
+
+  const advanceBtn = $('practical-advance');
+  const showAdvance = !!opts.showAdvance && !!getLevel(pathId, level + 1);
+  advanceBtn.classList.toggle('hidden', !showAdvance);
+  if (showAdvance) advanceBtn.dataset.nextLevel = level + 1;
+
+  // mark practical as viewed
+  const pp = pathProgress(pathId);
+  if (!pp.practicalsViewed.includes(level)) {
+    pp.practicalsViewed.push(level);
+    saveProgress();
+  }
+  show('view-practical');
 }
 
 function renderReview() {
@@ -3544,6 +5206,7 @@ function bindEvents() {
         $('track-pick-angular-count').textContent = `${angCount} eligible Qs`;
         show('view-track-picker');
       }
+      else if (mode === 'path') renderPathPicker();
       else renderTopicPicker(mode);
     });
   });
@@ -3560,6 +5223,27 @@ function bindEvents() {
       const btn = e.target.closest('.track-filter');
       TRACK_FILTER = btn.dataset.trackFilter;
       renderTopicPicker('drill');
+    }
+    if (e.target.closest('.path-pick')) {
+      const btn = e.target.closest('.path-pick');
+      renderLevelPicker(btn.dataset.pathId);
+    }
+    if (e.target.closest('.level-start')) {
+      const btn = e.target.closest('.level-start');
+      e.stopPropagation();
+      startPathLevel(ACTIVE_PATH_ID, parseInt(btn.dataset.level, 10));
+      return;
+    }
+    if (e.target.closest('.level-practical')) {
+      const btn = e.target.closest('.level-practical');
+      e.stopPropagation();
+      renderPractical(ACTIVE_PATH_ID, parseInt(btn.dataset.level, 10));
+      return;
+    }
+    // clicking the row itself (not an inner button) opens the level (start)
+    const row = e.target.closest('.level-row');
+    if (row && row.dataset.level) {
+      startPathLevel(ACTIVE_PATH_ID, parseInt(row.dataset.level, 10));
     }
   });
   $('quiz-submit').addEventListener('click', () => revealAnswer());
@@ -3580,10 +5264,75 @@ function bindEvents() {
   });
   $('quiz-exit').addEventListener('click', () => {
     if (confirm('Exit session? Progress for completed Qs is saved.')) {
+      const wasPath = SESSION?.mode === 'path';
+      const pid = SESSION?.pathId;
       SESSION = null;
-      renderHome();
-      show('view-home');
+      if (wasPath && pid) {
+        renderLevelPicker(pid);
+      } else {
+        renderHome();
+        show('view-home');
+      }
     }
+  });
+
+  // Level picker back
+  $('level-picker-back').addEventListener('click', () => {
+    ACTIVE_PATH_ID = null;
+    renderPathPicker();
+  });
+
+  // Path level end buttons
+  $('path-end-advance').addEventListener('click', () => {
+    const pid = ACTIVE_PATH_ID;
+    if (!pid) { show('view-home'); return; }
+    const pp = pathProgress(pid);
+    const next = pp.currentLevel;
+    const hasNext = !!getLevel(pid, next);
+    if (hasNext) startPathLevel(pid, next);
+    else renderLevelPicker(pid);
+  });
+  $('path-end-repeat').addEventListener('click', () => {
+    const pid = ACTIVE_PATH_ID;
+    if (!pid) { show('view-home'); return; }
+    const pp = pathProgress(pid);
+    // figure out the last level we just played by reading the visible header — fallback: currentLevel
+    // We saved best score to pp.bestScores; the level we just played is the highest of (completed list's last) and (currentLevel - 1 if just advanced).
+    // Simplest: parse from the title.
+    const m = /Level\s+(\d+)/.exec($('path-end-title').textContent || '');
+    const lvl = m ? parseInt(m[1], 10) : (pp.currentLevel || 1);
+    startPathLevel(pid, lvl);
+  });
+  $('path-end-practical').addEventListener('click', () => {
+    const pid = ACTIVE_PATH_ID;
+    if (!pid) { show('view-home'); return; }
+    const m = /Level\s+(\d+)/.exec($('path-end-title').textContent || '');
+    const lvl = m ? parseInt(m[1], 10) : (pathProgress(pid).currentLevel || 1);
+    renderPractical(pid, lvl, { showAdvance: true });
+  });
+  $('path-end-exit').addEventListener('click', () => {
+    if (ACTIVE_PATH_ID) renderLevelPicker(ACTIVE_PATH_ID);
+    else { renderHome(); show('view-home'); }
+  });
+
+  // Practical view buttons
+  $('practical-back').addEventListener('click', () => {
+    if (ACTIVE_PATH_ID) renderLevelPicker(ACTIVE_PATH_ID);
+    else { renderHome(); show('view-home'); }
+  });
+  $('practical-back-to-path').addEventListener('click', () => {
+    if (ACTIVE_PATH_ID) renderLevelPicker(ACTIVE_PATH_ID);
+    else { renderHome(); show('view-home'); }
+  });
+  $('practical-reveal-btn').addEventListener('click', () => {
+    $('practical-solution-wrap').classList.remove('hidden');
+    $('practical-solution-hint').classList.add('hidden');
+    $('practical-reveal-btn').textContent = 'Revealed';
+    $('practical-reveal-btn').disabled = true;
+  });
+  $('practical-advance').addEventListener('click', () => {
+    const next = parseInt($('practical-advance').dataset.nextLevel, 10);
+    if (ACTIVE_PATH_ID && next) startPathLevel(ACTIVE_PATH_ID, next);
   });
   $('export-btn').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(PROGRESS, null, 2)], { type: 'application/json' });
