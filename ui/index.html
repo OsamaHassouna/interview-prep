@@ -366,7 +366,11 @@
     </div>
   </div>
 
+  <h2 class="text-lg font-bold mb-3">Guided Paths</h2>
+  <div id="stats-paths-list" class="space-y-2 mb-8"></div>
+
   <h2 class="text-lg font-bold mb-3">Mastery by topic</h2>
+  <p class="text-xs text-slate-500 mb-3">Only L2+ correct answers count toward mastery tiers (Bronze → Platinum).</p>
   <div id="stats-mastery-list" class="space-y-2 mb-8"></div>
 
   <h2 class="text-lg font-bold mb-3">Data</h2>
@@ -5133,11 +5137,93 @@ function renderReview() {
   });
 }
 
+function renderStatsPaths() {
+  const wrap = $('stats-paths-list');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  const entries = Object.entries(BANK.paths || {});
+  if (entries.length === 0) {
+    wrap.innerHTML = '<div class="text-slate-500 text-sm p-3 rounded-lg bg-slate-900 border border-slate-800">No guided paths yet.</div>';
+    return;
+  }
+  for (const [pid, p] of entries) {
+    const pp = pathProgress(pid);
+    const total = p.levels.length;
+    const passed = pp.completed.length;
+    const pct = total === 0 ? 0 : Math.round((passed / total) * 100);
+    const dots = p.levels.map(L => {
+      const best = pp.bestScores[L.level];
+      const passedThis = pp.completed.includes(L.level);
+      const attempted = best != null;
+      const unlocked = L.level <= pp.currentLevel;
+      const seenPractical = pp.practicalsViewed.includes(L.level);
+      let symbol, cls, title;
+      if (passedThis) {
+        symbol = '●'; cls = 'text-emerald-400';
+        title = `L${L.level} ${L.title} — passed (best ${Math.round(best*100)}%)`;
+      } else if (attempted) {
+        symbol = '◐'; cls = 'text-amber-400';
+        title = `L${L.level} ${L.title} — attempted (best ${Math.round(best*100)}%)`;
+      } else if (unlocked) {
+        symbol = '○'; cls = 'text-slate-500';
+        title = `L${L.level} ${L.title} — available`;
+      } else {
+        symbol = '·'; cls = 'text-slate-700';
+        title = `L${L.level} ${L.title} — locked`;
+      }
+      if (seenPractical) title += ' · practical viewed';
+      return `<span class="${cls} text-lg leading-none" title="${escapeHtml(title)}">${symbol}</span>`;
+    }).join(' ');
+
+    const levelRows = p.levels.map(L => {
+      const best = pp.bestScores[L.level];
+      const passedThis = pp.completed.includes(L.level);
+      const seen = pp.practicalsViewed.includes(L.level);
+      const stateBadge = passedThis
+        ? `<span class="text-xs px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300">passed · ${Math.round(best*100)}%</span>`
+        : best != null
+          ? `<span class="text-xs px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300">best ${Math.round(best*100)}%</span>`
+          : (L.level <= pp.currentLevel ? '<span class="text-xs text-slate-500">not yet</span>' : '<span class="text-xs text-slate-600">locked</span>');
+      return `<div class="flex items-center justify-between text-xs py-1">
+        <div class="text-slate-300">L${L.level} <span class="text-slate-500">· ${escapeHtml(L.title)}</span></div>
+        <div class="flex items-center gap-2">
+          ${seen ? '<span class="text-xs text-amber-300" title="Practical viewed">🛠️</span>' : ''}
+          ${stateBadge}
+        </div>
+      </div>`;
+    }).join('');
+
+    wrap.insertAdjacentHTML('beforeend', `
+      <details class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden">
+        <summary class="cursor-pointer p-4 list-none">
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xl">${p.emoji || '📈'}</span>
+              <span class="font-semibold">${escapeHtml(p.label)}</span>
+            </div>
+            <div class="text-xs text-slate-400">${passed} / ${total} levels passed · Level reached <span class="text-slate-200 font-mono">${pp.currentLevel}</span></div>
+          </div>
+          <div class="h-1.5 bg-slate-800 rounded-full overflow-hidden mb-3">
+            <div class="h-full bg-gradient-to-r from-amber-500 to-orange-500" style="width: ${pct}%"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex gap-1">${dots}</div>
+            <div class="text-xs text-slate-500">▼ details</div>
+          </div>
+        </summary>
+        <div class="border-t border-slate-800 p-4 space-y-1">${levelRows}</div>
+      </details>
+    `);
+  }
+}
+
 function renderStats() {
   $('stats-xp').textContent = PROGRESS.player.xp;
   $('stats-answered').textContent = PROGRESS.player.total_questions_answered;
   $('stats-best-streak').textContent = PROGRESS.player.best_streak;
   $('stats-sessions').textContent = PROGRESS.player.sessions_completed;
+
+  renderStatsPaths();
 
   const list = $('stats-mastery-list');
   list.innerHTML = '';
